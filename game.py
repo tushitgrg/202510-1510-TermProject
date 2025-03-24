@@ -6,6 +6,7 @@ import time
 
 import random
 import curses
+import pyfiglet
 
 
 
@@ -159,6 +160,8 @@ def get_user_choice(stdscr, prompt_y):
         key = stdscr.getkey().lower()
         if key in ['w', 'a', 's', 'd']:
             input_direction = key
+        elif key == 'q':
+            return None
         else:
             stdscr.addstr(prompt_y + 1, 0, "Invalid Move!! ")
             stdscr.refresh()
@@ -167,7 +170,7 @@ def get_user_choice(stdscr, prompt_y):
 
 def add_enemy_or_space():
     random_number = random.randint(1, 10)
-    if random_number > 8:
+    if random_number > 9:
         return "enemy"
     return "space"
 
@@ -310,18 +313,14 @@ def play_game_scene(stdscr, message):
     stdscr.getkey()
 
 
-def play_animation_fire(stdscr):
-    won_message = r"""
-__   __            ____                   _               _ _ 
-\ \ / /__  _   _  / ___| _   _ _ ____   _(_)_   _____  __| | |
- \ V / _ \| | | | \___ \| | | | '__\ \ / / \ \ / / _ \/ _` | |
-  | | (_) | |_| |  ___) | |_| | |   \ V /| |\ V /  __/ (_| |_|
-  |_|\___/ \__,_| |____/ \__,_|_|    \_/ |_| \_/ \___|\__,_(_)
-    """
+def play_animation_fire(stdscr, if_won):
+    won_message = pyfiglet.figlet_format("You Survived!")
+    lost_message = pyfiglet.figlet_format("You Lost!")
+    message = won_message if if_won else lost_message
     height, width = stdscr.getmaxyx()
     size = width * height
     char = [" ", ".", ":", "^", "*", "x", "s", "S", "#", "$"]
-    lines = won_message.strip().split('\n')
+    lines = message.strip().split('\n')
 
     curses.curs_set(0)
     curses.start_color()
@@ -355,60 +354,30 @@ __   __            ____                   _               _ _
             break
     stdscr.nodelay(False)
 
+def welcome_user_and_ask_for_name(stdscr):
+    welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
+
+    stdscr.clear()
+    max_y, max_x = stdscr.getmaxyx()
+
+    lines = welcome_message.strip().split('\n')
+    start_y = max(0, (max_y - len(lines)) // 2)
+
+    for i, line in enumerate(lines):
+        if start_y + i < max_y:
+            start_x = max(0, (max_x - len(line)) // 2)
+            stdscr.addstr(start_y + i, start_x, line[:max_x - 1])
+
+    stdscr.refresh()
+    return get_user_name(stdscr)
+
 
 def game(stdscr):
     """
     Drive the game.
     """
     rows = 15
-    columns = 15
-    welcome_message = r"""
- __        __   _                                                   ,~,
- \ \      / /__| | ___ ___  _ __ ___   ___                        (((}
-  \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \                      -''-.
-   \ V  V /  __/ | (_| (_) | | | | | |  __/                     (\  /\) 
-    \_/\_/ \___|_|\___\___/|_| |_| |_|\___|             ~______\) | `\\
-                                                        ~~~(         |  ') 
-   / \   __| |_   _____ _ __ | |_ _   _ _ __ ___ _ __        | )____(  |
-  / _ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \ '__|      /|/     ` /|
- / ___ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/ |         \ \      / |
-/_/   \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|_|          |\|\   /| |\\
-
- _____ ___  
-|_   _/ _ \ 
-  | || | | |
-  | || |_| |
-  |_| \___/ 
-  
-   ___        __                       _            
-|_ _|_ __  / _| ___ _ __ _ __   ___ ( )___        
- | || '_ \| |_ / _ \ '__| '_ \ / _ \|// __|       
- | || | | |  _|  __/ |  | | | | (_) | \__ \       
-|___|_| |_|_|  \___|_|  |_| |_|\___/  |___/   _   
-    | |_   _  __| | __ _ _ __ ___   ___ _ __ | |_ 
- _  | | | | |/ _` |/ _` | '_ ` _ \ / _ \ '_ \| __|
-| |_| | |_| | (_| | (_| | | | | | |  __/ | | | |_ 
- \___/ \__,_|\__,_|\__, |_| |_| |_|\___|_| |_|\__|
-                   |___/                             
-"""
-    lost_message = r"""
- __   __                             ____,
- \ \ / /__  _   _    __ _ _ __ ___  /.---|
-  \ V / _ \| | | |  / _` | '__/ _ \ `    |     ___
-   | | (_) | |_| | | (_| | | |  __/     (=\.  /-. \
-   |_|\___/ \__,_|  \__,_|_|  \___|      |\/\_|"|  |
-      _                _                  |_\ |;-|  ;
-   __| | ___  __ _  __| |                 | / \| |_/ \
-  / _` |/ _ \/ _` |/ _` |                 | )/\/      \
- | (_| |  __/ (_| | (_| |                  | ( '|  \   |
-  \__,_|\___|\__,_|\__,_|                   |    \_ /   \
-                                            |    /  \_.--\
-                                            \    |    (|`\ 
-                                             |   |     \
-                                             |   |      '.
-                                             |  /         \
-                                              \  \.__.__.-._)
-"""
+    columns = 30
     character = make_character()
     board, goal_position = make_board(rows, columns, character)
     achieved_goal = False
@@ -433,15 +402,20 @@ Keep the fire raging before her foul curses can take hold.
 
 [Timer: 5 seconds – Mash 'B' to burn her completely!]
 
-"""
+""",
+        "game_over": f"""
+{pyfiglet.figlet_format("Game Over!")}  
+ 
+ Press any Key to Quit the Game
+        """
     }
-    stdscr.addstr(0, 0, welcome_message)
-    input_name = get_user_name(stdscr)
+    input_name = welcome_user_and_ask_for_name(stdscr)
     play_game_scene(stdscr, game_dialogues["intro"])
-    play_animation_fire(stdscr)
     while character_alive and not achieved_goal:
         describe_current_location(stdscr, board, character, input_name)
         direction = get_user_choice(stdscr, rows + 4)
+        if direction is None:
+            break
         valid_move, new_pos = validate_move(board, character, direction)
         if valid_move:
             move_character(character, new_pos)
@@ -461,18 +435,13 @@ Keep the fire raging before her foul curses can take hold.
                 # guessing_game(stdscr, character)
             character_alive = is_alive(character)
             if not character_alive:
-                stdscr.clear()
-                stdscr.addstr(0, 0, lost_message)
-                stdscr.refresh()
-                stdscr.getkey()
+                play_animation_fire(stdscr, False)
         else:
             stdscr.addstr(rows + 6, 0, "You cant go in that direction lol")
             stdscr.refresh()
             stdscr.getkey()
-    stdscr.clear()
-    stdscr.addstr(0, 0, "Game Over")
-    stdscr.refresh()
-    stdscr.getkey()
+
+    play_game_scene(stdscr, game_dialogues["game_over"])
 
 
 def main(stdscr):
@@ -482,7 +451,10 @@ def main(stdscr):
     curses.curs_set(0)
     stdscr.clear()
     #todo add a try block for curses.erro
-    game(stdscr)
+    try:
+        game(stdscr)
+    except KeyboardInterrupt:
+        print("Game exited Successfully!")
 
 
 if __name__ == "__main__":
