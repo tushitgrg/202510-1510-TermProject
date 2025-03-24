@@ -22,8 +22,8 @@ def generate_maze(start_x, start_y, board, rows, cols, goal_position):
         result_x = start_x + dx
         result_y = start_y + dy
         if 0 <= result_x < cols and 0 <= result_y < rows and board[(result_y, result_x)] == "wall":
-            board[(start_y + dy // 2, start_x + dx // 2)] = add_enemy_or_space()
-            board[(result_y, result_x)] = add_enemy_or_space()
+            board[(start_y + dy // 2, start_x + dx // 2)] = add_random_block()
+            board[(result_y, result_x)] = add_random_block()
             goal_position[0] = result_y
             goal_position[1] = result_x
             generate_maze(result_x, result_y, board, rows, cols, goal_position)
@@ -46,8 +46,9 @@ def describe_current_location(stdscr, board, character, user_name):
         curses.start_color()
         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-        curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
         curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
         describe_current_location.colors_initialized = True
 
     ascii_chars = {
@@ -57,20 +58,24 @@ def describe_current_location(stdscr, board, character, user_name):
         },
         "character": {
             "char": "@",
-            "attr": curses.color_pair(1) | curses.A_BOLD
+            "attr": curses.color_pair(4) | curses.A_BOLD
         },
         "Goal": {
-            "char": "$",
+            "char": "༒",
             "attr": curses.color_pair(2) | curses.A_BOLD
         },
         "wall": {
-            "char": "#",
+            "char": "█",
             "attr": curses.color_pair(3) | curses.A_BOLD
         },
         "enemy": {
-            "char": "%",
+            "char": "Ψ",
             "attr": curses.color_pair(1) | curses.A_BOLD
         },
+        "heal": {
+            "char": "ɸ",
+            "attr": curses.color_pair(5) | curses.A_BOLD
+        }
     }
 
     board_copy = board.copy()
@@ -133,7 +138,7 @@ def check_for_foe(board, character):
 def validate_move(board, character, direction):
     x_pos = character["X-coordinate"]
     y_pos = character["Y-coordinate"]
-    eligible_places = ["space", "Goal", "enemy"]
+    eligible_places = ["space", "Goal", "enemy", "heal"]
     new_pos = None
     if direction == "w":
         new_pos = (y_pos - 1, x_pos)
@@ -167,11 +172,15 @@ def get_user_choice(stdscr, prompt_y):
             stdscr.refresh()
     return input_direction
 
+def check_for_heal():
+    pass
 
-def add_enemy_or_space():
-    random_number = random.randint(1, 10)
-    if random_number > 9:
+def add_random_block():
+    random_number = random.randint(1, 20)
+    if random_number == 20:
         return "enemy"
+    elif random_number == 10:
+        return "heal"
     return "space"
 
 
@@ -225,6 +234,12 @@ def guessing_game(stdscr, character):
     stdscr.refresh()
     stdscr.getkey()
 
+
+def is_screen_size_ok(stdscr):
+    max_y, max_x = stdscr.getmaxyx()
+    if max_y < 45 or max_x < 100:
+        return False
+    return True
 
 def struggle_game(stdscr, message, character):
     stdscr.clear()
@@ -409,6 +424,11 @@ Keep the fire raging before her foul curses can take hold.
  Press any Key to Quit the Game
         """
     }
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
     input_name = welcome_user_and_ask_for_name(stdscr)
     play_game_scene(stdscr, game_dialogues["intro"])
     while character_alive and not achieved_goal:
@@ -450,7 +470,7 @@ def main(stdscr):
     """
     curses.curs_set(0)
     stdscr.clear()
-    #todo add a try block for curses.erro
+    #todo add a try block for curses.error
     try:
         game(stdscr)
     except KeyboardInterrupt:
