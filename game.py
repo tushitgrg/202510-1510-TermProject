@@ -130,7 +130,7 @@ def get_user_name(stdscr):
     curses.echo()
     input_name = ""
     while not input_name.strip():
-        input_name = stdscr.getstr(max_y - 2, 0)
+        input_name = stdscr.getstr(max_y - 2, 0).decode("utf-8")
     return input_name
 
 
@@ -325,55 +325,35 @@ def is_alive(character):
 
 
 
-def play_riddle(stdscr):
+def play_riddle(stdscr, character):
     riddles = [
         {
             "description": "You enter a dimly lit room. A mysterious inscription catches your eye.\n\nWhat has keys, but no locks; space, but no room; and you can enter, but not go in?",
-            "answer": "keyboard",
-            "success_message": "The wall slides open, revealing a mysterious passage!",
-            "failure_message": "Ancient mechanisms grind. The wall remains sealed."
+            "answer": ["keyboard"]
         },
         {
             "description": "A chamber of mirrors reflects your every move, casting shifting shadows.\n\nI am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
-            "answer": "fire",
-            "success_message": "Flames dance, and a hidden door creaks open!",
-            "failure_message": "The mirrors remain cold and unresponsive."
+            "answer": ["fire"]
         },
         {
             "description": "An ancient library with dusty scrolls surrounds you, whispering forgotten tales.\n\nThe more you take, the more you leave behind. What am I?",
-            "answer": "footsteps",
-            "success_message": "Books rustle as a secret passage reveals itself!",
-            "failure_message": "The scrolls remain silent, guarding their secrets."
+            "answer": ["footsteps", "footstep"]
         },
         {
             "description": "A room filled with water-worn stones and echoing whispers, ancient maps scattered about.\n\nI have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
-            "answer": "map",
-            "success_message": "Water begins to drain, revealing a hidden path!",
-            "failure_message": "The whispers fade. The stones remain unmoved."
+            "answer": ["map", "maps"]
         },
         {
             "description": "A chamber bathed in soft, ethereal light, with delicate objects casting long shadows.\n\nWhat can travel around the world while staying in a corner?",
-            "answer": "stamp",
-            "success_message": "Light pulses, and a new doorway materializes!",
-            "failure_message": "The light dims. The riddle's secret remains locked away."
+            "answer": ["stamp", "stamps"]
         },
         {
             "description": "A room of intricate clockwork and spinning gears, metal glinting in muted light.\n\nI am always hungry; I must always be fed. The finger I touch will soon turn red. What am I?",
-            "answer": "fire",
-            "success_message": "Gears align! A mechanical door swings open!",
-            "failure_message": "The clockwork continues its endless rotation."
-        },
-        {
-            "description": "A chamber of crystal and echoing silence, prisms catching what little light exists.\n\nWhat breaks yet never falls, and what falls yet never breaks?",
-            "answer": "day and night",
-            "success_message": "Crystals shatter and reform, revealing a path forward!",
-            "failure_message": "Silence consumes the room. The riddle stands unbroken."
+            "answer": ["fire"]
         },
         {
             "description": "A room filled with floating, luminescent symbols swirling in ethereal patterns.\n\nI have a head and a tail that will never meet. Having too many of me is always a treat. What am I?",
-            "answer": "coin",
-            "success_message": "Symbols swirl and part, creating a luminous corridor!",
-            "failure_message": "The symbols remain static, blocking your path."
+            "answer": ["coin"]
         }
     ]
     riddle = random.choice(riddles)
@@ -388,7 +368,16 @@ def play_riddle(stdscr):
             stdscr.addstr(start_y + i, start_x, line[:max_x - 1])
 
     stdscr.refresh()
-    stdscr.getkey()
+    curses.echo()
+    input_answer = ""
+    while not input_answer.strip():
+        input_answer = stdscr.getstr(start_y + len(lines) + 1, 20).decode("utf-8").lower()
+    if input_answer in riddle["answer"]:
+        play_game_scene(stdscr, "You answer correctly. \n The wall slides open, revealing a mysterious passage!")
+    else:
+        play_game_scene(stdscr, riddle["You answered Wrong. \n You loose 1 HP"])
+        character["Current HP"] -= 1
+    curses.noecho()
 
 def play_game_scene(stdscr, message):
     stdscr.clear()
@@ -534,7 +523,7 @@ def game(stdscr):
     play_game_scene(stdscr, game_dialogues["intro"])
 
     while character_alive and not achieved_goal:
-        if not play_obj.is_playing():  # Check if audio has stopped
+        if not play_obj.is_playing():
             play_obj = music_obj.play()
 
         describe_current_location(stdscr, board, character, input_name)
@@ -550,9 +539,10 @@ def game(stdscr):
             there_is_a_challenger = check_for_foe(board, character)
             achieved_goal = check_if_goal_attained(goal_position, character)
             if achieved_goal:
+                play_riddle(stdscr)
                 board, goal_position = make_board(rows, columns, character)
                 describe_current_location(stdscr, board, character, input_name)
-                stdscr.addstr(rows + 6, 0, "Yayyy! You achieved the goal!!")
+
                 stdscr.refresh()
                 achieved_goal = False
 
