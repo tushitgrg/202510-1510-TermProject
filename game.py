@@ -2,6 +2,7 @@
 Tushit Garg
 A01418176
 """
+import simpleaudio
 import time
 
 import random
@@ -96,10 +97,18 @@ def describe_current_location(stdscr, board, character, user_name):
 
     location_y = current_row + 3
 
-    stdscr.addstr(location_y, 0, f"This is a {board[(character['Y-coordinate'], character['X-coordinate'])]}",
-                  curses.color_pair(4))
+    # stdscr.addstr(location_y, 0, f"This is a {board[(character['Y-coordinate'], character['X-coordinate'])]}",
+    #               curses.color_pair(4))
+    heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
 
     health_string = "♥" * character["Current HP"] + "." * (5 - character["Current HP"])
+    if board[(character["Y-coordinate"], character["X-coordinate"])] == "heal":
+
+        if character["Current HP"] + 1 <= 5:
+            heal_obj.play()
+            character["Current HP"] += 1
+            board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
+            stdscr.refresh()
 
     stdscr.addstr(max_y - 2, 0, f"{user_name} Current HP: [{health_string}] ({character['Current HP']}/5)",
                   curses.color_pair(4))
@@ -159,7 +168,6 @@ def move_character(character, new_pos):
 def get_user_choice(stdscr, prompt_y):
     input_direction = ""
     while not input_direction:
-        stdscr.addstr(prompt_y, 0, "Please Type W/A/S/D to Move ")
         stdscr.refresh()
         key = stdscr.getkey().lower()
         if key in ['w', 'a', 's', 'd']:
@@ -172,8 +180,6 @@ def get_user_choice(stdscr, prompt_y):
     return input_direction
 
 
-def check_for_heal():
-    pass
 
 
 def add_random_block():
@@ -245,6 +251,8 @@ def is_screen_size_ok(stdscr):
 
 
 def struggle_game(stdscr, message, character):
+    fire_obj = simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav")
+    play_obj = fire_obj.play()
     stdscr.clear()
     stdscr.nodelay(True)
     stdscr.timeout(100)
@@ -287,6 +295,7 @@ def struggle_game(stdscr, message, character):
             break
 
         stdscr.refresh()
+    play_obj.stop()
     stdscr.nodelay(False)
 
 
@@ -314,6 +323,72 @@ def is_alive(character):
         return True
     return False
 
+
+
+def play_riddle(stdscr):
+    riddles = [
+        {
+            "description": "You enter a dimly lit room. A mysterious inscription catches your eye.\n\nWhat has keys, but no locks; space, but no room; and you can enter, but not go in?",
+            "answer": "keyboard",
+            "success_message": "The wall slides open, revealing a mysterious passage!",
+            "failure_message": "Ancient mechanisms grind. The wall remains sealed."
+        },
+        {
+            "description": "A chamber of mirrors reflects your every move, casting shifting shadows.\n\nI am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
+            "answer": "fire",
+            "success_message": "Flames dance, and a hidden door creaks open!",
+            "failure_message": "The mirrors remain cold and unresponsive."
+        },
+        {
+            "description": "An ancient library with dusty scrolls surrounds you, whispering forgotten tales.\n\nThe more you take, the more you leave behind. What am I?",
+            "answer": "footsteps",
+            "success_message": "Books rustle as a secret passage reveals itself!",
+            "failure_message": "The scrolls remain silent, guarding their secrets."
+        },
+        {
+            "description": "A room filled with water-worn stones and echoing whispers, ancient maps scattered about.\n\nI have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+            "answer": "map",
+            "success_message": "Water begins to drain, revealing a hidden path!",
+            "failure_message": "The whispers fade. The stones remain unmoved."
+        },
+        {
+            "description": "A chamber bathed in soft, ethereal light, with delicate objects casting long shadows.\n\nWhat can travel around the world while staying in a corner?",
+            "answer": "stamp",
+            "success_message": "Light pulses, and a new doorway materializes!",
+            "failure_message": "The light dims. The riddle's secret remains locked away."
+        },
+        {
+            "description": "A room of intricate clockwork and spinning gears, metal glinting in muted light.\n\nI am always hungry; I must always be fed. The finger I touch will soon turn red. What am I?",
+            "answer": "fire",
+            "success_message": "Gears align! A mechanical door swings open!",
+            "failure_message": "The clockwork continues its endless rotation."
+        },
+        {
+            "description": "A chamber of crystal and echoing silence, prisms catching what little light exists.\n\nWhat breaks yet never falls, and what falls yet never breaks?",
+            "answer": "day and night",
+            "success_message": "Crystals shatter and reform, revealing a path forward!",
+            "failure_message": "Silence consumes the room. The riddle stands unbroken."
+        },
+        {
+            "description": "A room filled with floating, luminescent symbols swirling in ethereal patterns.\n\nI have a head and a tail that will never meet. Having too many of me is always a treat. What am I?",
+            "answer": "coin",
+            "success_message": "Symbols swirl and part, creating a luminous corridor!",
+            "failure_message": "The symbols remain static, blocking your path."
+        }
+    ]
+    riddle = random.choice(riddles)
+    stdscr.clear()
+    max_y, max_x = stdscr.getmaxyx()
+    lines = riddle["description"].strip().split('\n')
+    start_y = max(0, (max_y - len(lines)) // 2)
+
+    for i, line in enumerate(lines):
+        if start_y + i < max_y:
+            start_x = max(0, (max_x - len(line)) // 2)
+            stdscr.addstr(start_y + i, start_x, line[:max_x - 1])
+
+    stdscr.refresh()
+    stdscr.getkey()
 
 def play_game_scene(stdscr, message):
     stdscr.clear()
@@ -417,44 +492,51 @@ def game(stdscr):
     rows = 15
     columns = 30
     character = make_character()
+    music_obj = simpleaudio.WaveObject.from_wave_file("sounds/game-music.wav")
+    play_obj = music_obj.play()
     board, goal_position = make_board(rows, columns, character)
     achieved_goal = False
     character_alive = True
     stdscr.clear()
-    game_dialogues = {
-        "intro": """
-Night falls over the cursed realm of Ashenvale,
-where dark magic festers and shadows twist in the cold wind.
-You, Sir Garrick—the relentless witch hunter—have been summoned
-by the Grand Council of Purity. Your sacred duty: eradicate the witches
-that plague these lands with the holy flames of justice.
 
-[Press ENTER to begin your hunt.]
-
-
-    """,
-        "enemy_encountered": """Your torch roars to life as holy fire leaps from your hands!
-The witch screams, her dark incantations drowned by the blaze.
-Press the 'B' key repeatedly to stoke the flames and ensure her doom.
-Keep the fire raging before her foul curses can take hold.
-
-[Timer: 5 seconds – Mash 'B' to burn her completely!]
-
-""",
-        "game_over": f"""
-{pyfiglet.figlet_format("Game Over!")}  
- 
- Press any Key to Quit the Game
-        """
-    }
     if not is_screen_size_ok(stdscr):
         stdscr.addstr(0, 0, "Please Increase your window size and try again")
         stdscr.addstr(2, 0, "Press any key to exit")
         stdscr.getkey()
         return
     input_name = welcome_user_and_ask_for_name(stdscr)
+    game_dialogues = {
+        "intro": f"""
+    Night falls over the cursed realm of Ashenvale,
+    where dark magic festers and shadows twist in the cold wind.
+    You, {input_name}—the relentless witch hunter—have been summoned
+    by the Grand Council of Purity. Your sacred duty: eradicate the witches
+    that plague these lands with the holy flames of justice.
+
+    [Press ENTER to begin your hunt.]
+
+
+        """,
+        "enemy_encountered": """Your torch roars to life as holy fire leaps from your hands!
+    The witch screams, her dark incantations drowned by the blaze.
+    Press the 'B' key repeatedly to stoke the flames and ensure her doom.
+    Keep the fire raging before her foul curses can take hold.
+
+    [Timer: 5 seconds – Mash 'B' to burn her completely!]
+
+    """,
+        "game_over": f"""
+    {pyfiglet.figlet_format("Game Over!")}  
+
+     Press any Key to Quit the Game
+            """
+    }
     play_game_scene(stdscr, game_dialogues["intro"])
+
     while character_alive and not achieved_goal:
+        if not play_obj.is_playing():  # Check if audio has stopped
+            play_obj = music_obj.play()
+
         describe_current_location(stdscr, board, character, input_name)
         direction = get_user_choice(stdscr, rows + 4)
         if direction is None:
