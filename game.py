@@ -9,7 +9,6 @@ import curses
 import pyfiglet
 
 
-
 def display_text(stdscr, text, y, x):
     stdscr.addstr(y, x, text)
     stdscr.refresh()
@@ -172,8 +171,10 @@ def get_user_choice(stdscr, prompt_y):
             stdscr.refresh()
     return input_direction
 
+
 def check_for_heal():
     pass
+
 
 def add_random_block():
     random_number = random.randint(1, 20)
@@ -188,6 +189,7 @@ def check_if_goal_attained(goal_position, character):
     if character["X-coordinate"] == goal_position[1] and character["Y-coordinate"] == goal_position[0]:
         return True
     return False
+
 
 #todo remove this
 def guessing_game(stdscr, character):
@@ -240,6 +242,7 @@ def is_screen_size_ok(stdscr):
     if max_y < 45 or max_x < 100:
         return False
     return True
+
 
 def struggle_game(stdscr, message, character):
     stdscr.clear()
@@ -328,6 +331,25 @@ def play_game_scene(stdscr, message):
     stdscr.getkey()
 
 
+def move_enemies(board, character):
+    enemy_positions = sorted((pos for pos, desc in board.items() if desc == "enemy"))
+
+    for row, column in enemy_positions:
+        directions = [("row", -1), ("row", 1), ("column", -1), ("column", 1)]
+        random.shuffle(directions)
+
+        character_pos = (character["Y-coordinate"], character["X-coordinate"])
+
+        for axis, diff in directions:
+            new_row, new_col = row + (diff if axis == "row" else 0), column + (diff if axis == "column" else 0)
+
+            if (new_row, new_col) == character_pos:
+                break
+
+            if (new_row, new_col) in board and board[(new_row, new_col)] == "space":
+                board[(row, column)], board[(new_row, new_col)] = board[(new_row, new_col)], board[(row, column)]
+                break
+
 def play_animation_fire(stdscr, if_won):
     won_message = pyfiglet.figlet_format("You Survived!")
     lost_message = pyfiglet.figlet_format("You Lost!")
@@ -368,6 +390,7 @@ def play_animation_fire(stdscr, if_won):
         if stdscr.getch() != -1:
             break
     stdscr.nodelay(False)
+
 
 def welcome_user_and_ask_for_name(stdscr):
     welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
@@ -438,7 +461,9 @@ Keep the fire raging before her foul curses can take hold.
             break
         valid_move, new_pos = validate_move(board, character, direction)
         if valid_move:
+            move_enemies(board, character)
             move_character(character, new_pos)
+
             describe_current_location(stdscr, board, character, input_name)
             there_is_a_challenger = check_for_foe(board, character)
             achieved_goal = check_if_goal_attained(goal_position, character)
@@ -450,7 +475,7 @@ Keep the fire raging before her foul curses can take hold.
                 achieved_goal = False
 
             if there_is_a_challenger:
-                struggle_game(stdscr,game_dialogues["enemy_encountered"], character)
+                struggle_game(stdscr, game_dialogues["enemy_encountered"], character)
                 stdscr.getkey()
                 # guessing_game(stdscr, character)
             character_alive = is_alive(character)
