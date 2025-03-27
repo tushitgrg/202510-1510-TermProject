@@ -95,7 +95,7 @@ def describe_current_location(stdscr, board, character, user_name):
         if row < max_y - 3 and column * 2 < max_x - 1:
             stdscr.addstr(row + 1, column * 2, details['char'], details['attr'])
 
-    location_y = current_row + 3
+    # location_y = current_row + 3
 
     # stdscr.addstr(location_y, 0, f"This is a {board[(character['Y-coordinate'], character['X-coordinate'])]}",
     #               curses.color_pair(4))
@@ -178,8 +178,6 @@ def get_user_choice(stdscr, prompt_y):
             stdscr.addstr(prompt_y + 1, 0, "Invalid Move!! ")
             stdscr.refresh()
     return input_direction
-
-
 
 
 def add_random_block():
@@ -324,7 +322,6 @@ def is_alive(character):
     return False
 
 
-
 def play_riddle(stdscr, character):
     riddles = [
         {
@@ -373,11 +370,12 @@ def play_riddle(stdscr, character):
     while not input_answer.strip():
         input_answer = stdscr.getstr(start_y + len(lines) + 1, 20).decode("utf-8").lower()
     if input_answer in riddle["answer"]:
-        play_game_scene(stdscr, "You answer correctly. \n The wall slides open, revealing a mysterious passage!")
+        play_game_scene(stdscr, "You answered correctly. \n The wall slides open, revealing a mysterious passage!")
     else:
-        play_game_scene(stdscr, riddle["You answered Wrong. \n You loose 1 HP"])
+        play_game_scene(stdscr, "You answered Wrong. \n You loose 1 HP")
         character["Current HP"] -= 1
     curses.noecho()
+
 
 def play_game_scene(stdscr, message):
     stdscr.clear()
@@ -413,6 +411,7 @@ def move_enemies(board, character):
             if (new_row, new_col) in board and board[(new_row, new_col)] == "space":
                 board[(row, column)], board[(new_row, new_col)] = board[(new_row, new_col)], board[(row, column)]
                 break
+
 
 def play_animation_fire(stdscr, if_won):
     won_message = pyfiglet.figlet_format("You Survived!")
@@ -458,17 +457,26 @@ def play_animation_fire(stdscr, if_won):
 
 def welcome_user_and_ask_for_name(stdscr):
     welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
-
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     stdscr.clear()
+
     max_y, max_x = stdscr.getmaxyx()
 
     lines = welcome_message.strip().split('\n')
     start_y = max(0, (max_y - len(lines)) // 2)
-
     for i, line in enumerate(lines):
-        if start_y + i < max_y:
-            start_x = max(0, (max_x - len(line)) // 2)
-            stdscr.addstr(start_y + i, start_x, line[:max_x - 1])
+        start_x = max(0, (max_x - len(line)) // 2)
+
+        for j in range(len(line) + 1):
+            stdscr.clear()
+            for k, prev_line in enumerate(lines[:i]):
+                prev_start_x = max(0, (max_x - len(prev_line)) // 2)
+                stdscr.addstr(start_y + k, prev_start_x, prev_line, curses.color_pair(3))
+
+            stdscr.addstr(start_y + i, start_x, line[:j], curses.color_pair(3))
+
+            stdscr.refresh()
+            time.sleep(0.007)
 
     stdscr.refresh()
     return get_user_name(stdscr)
@@ -539,7 +547,7 @@ def game(stdscr):
             there_is_a_challenger = check_for_foe(board, character)
             achieved_goal = check_if_goal_attained(goal_position, character)
             if achieved_goal:
-                play_riddle(stdscr)
+                play_riddle(stdscr, character)
                 board, goal_position = make_board(rows, columns, character)
                 describe_current_location(stdscr, board, character, input_name)
 
