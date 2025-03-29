@@ -52,81 +52,66 @@ def describe_current_location(stdscr, board, character, user_name):
         describe_current_location.colors_initialized = True
 
     ascii_chars = {
-        "space": {
-            "char": " ",
-            "attr": curses.color_pair(1) | curses.A_BOLD
-        },
-        "character": {
-            "char": "@",
-            "attr": curses.color_pair(4) | curses.A_BOLD
-        },
-        "Goal": {
-            "char": "༒",
-            "attr": curses.color_pair(2) | curses.A_BOLD
-        },
-        "wall": {
-            "char": "█",
-            "attr": curses.color_pair(3) | curses.A_BOLD
-        },
-        "enemy": {
-            "char": "Ψ",
-            "attr": curses.color_pair(1) | curses.A_BOLD
-        },
-        "heal": {
-            "char": "ɸ",
-            "attr": curses.color_pair(5) | curses.A_BOLD
-        },
-        "Boss": {
-            "char": "Ж",
-            "attr": curses.color_pair(1) | curses.A_BOLD
-        }
+        "space": {"char": " ", "attr": curses.color_pair(1) | curses.A_BOLD},
+        "character": {"char": "@", "attr": curses.color_pair(4) | curses.A_BOLD},
+        "Goal": {"char": "༒", "attr": curses.color_pair(2) | curses.A_BOLD},
+        "wall": {"char": "█", "attr": curses.color_pair(3) | curses.A_BOLD},
+        "enemy": {"char": "Ψ", "attr": curses.color_pair(1) | curses.A_BOLD},
+        "heal": {"char": "ɸ", "attr": curses.color_pair(5) | curses.A_BOLD},
+        "Boss": {"char": "Ж", "attr": curses.color_pair(1) | curses.A_BOLD}
     }
 
     board_copy = board.copy()
     board_copy[(character["Y-coordinate"], character["X-coordinate"])] = 'character'
 
-    current_row = -1
     max_y, max_x = stdscr.getmaxyx()
+    map_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, 0)
+    map_win.box()
+    map_win.addstr(0, 3, " Dungeon Map ", curses.A_BOLD)
 
     for (row, column), description in sorted(board_copy.items()):
-        if row != current_row:
-            current_row = row
-            y_pos = row + 1
-            if y_pos < max_y - 3:
-                stdscr.addstr(y_pos, 0, "")
-
         details = ascii_chars.get(description, {"char": "?", "attr": curses.color_pair(4)})
-        if row < max_y - 3 and column * 2 < max_x - 1:
-            stdscr.addstr(row + 1, column * 2, details['char'], details['attr'])
+        map_win.addstr(row + 1, 1 + column * 2, details['char'], details['attr'])
 
-    # location_y = current_row + 3
+    max_y, max_x = stdscr.getmaxyx()
 
-    # stdscr.addstr(location_y, 0, f"This is a {board[(character['Y-coordinate'], character['X-coordinate'])]}",
-    #               curses.color_pair(4))
-    heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
     rank_names = {
         1: "Novice Inquisitor",
         2: "Sanctified Purifier",
         3: "Grand Arbiter of Fire",
         4: "The Hand of Divine Wrath"
     }
-    health_string = "♥" * character["Current HP"] + "." * (character['Level'] * 5 - character["Current HP"])
-    if board[(character["Y-coordinate"], character["X-coordinate"])] == "heal":
 
+    stats_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, int(max_x / 2) - 1)
+    stats_win.box()
+    stats_win.addstr(0, 3, " Character Stats ", curses.A_BOLD | curses.color_pair(4))
+
+    stats_win.addstr(2, 1, f"Name: {user_name}", curses.color_pair(4))
+    stats_win.addstr(3, 1, f"Level: {character['Level']}", curses.color_pair(3))
+    stats_win.addstr(4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
+    stats_win.addstr(5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
+                     curses.color_pair(1))
+
+    stats_win.addstr(6, 1, "HP: [", curses.color_pair(4))
+    for i in range(character['Level'] * 5):
+        if i < character["Current HP"]:
+            stats_win.addch(6, 6 + i, '♥', curses.color_pair(5))
+        else:
+            stats_win.addch(6, 6 + i, '.', curses.color_pair(1))
+
+    stats_win.addstr(6, 6 + character['Level'] * 5, f"] ({character['Current HP']}/{character['Level'] * 5})",
+                     curses.color_pair(4))
+
+    stats_win.addstr(8, 1, "Controls:", curses.color_pair(4))
+    stats_win.addstr(9, 1, "W/A/S/D: Move", curses.color_pair(4))
+    stats_win.addstr(10, 1, "Q: Quit", curses.color_pair(4))
+
+    heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
+    if board[(character["Y-coordinate"], character["X-coordinate"])] == "heal":
         if character["Current HP"] + 1 <= character['Level'] * 5:
             heal_obj.play()
             character["Current HP"] += 1
             board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
-            stdscr.refresh()
-    stdscr.addstr(max_y - 4, 0, f"You are Level {character['Level']}, {rank_names[character['Level']]}",
-                  curses.color_pair(4))
-    stdscr.addstr(max_y - 3, 0, f"Current Experience {character['Experience']}/{character['Level'] * 200}",
-                  curses.color_pair(4))
-    stdscr.addstr(max_y - 2, 0,
-                  f"{user_name} Current HP: [{health_string}] ({character['Current HP']}/{character['Level'] * 5})",
-                  curses.color_pair(4))
-
-    stdscr.addstr(max_y - 1, 0, f"Use W/A/S/D to move, Q to quit {max_y} {max_x}", curses.color_pair(4) | curses.A_BOLD)
 
     stdscr.refresh()
 
@@ -218,7 +203,7 @@ def check_if_goal_attained(goal_position, character):
 
 def is_screen_size_ok(stdscr):
     max_y, max_x = stdscr.getmaxyx()
-    if max_y < 45 or max_x < 100:
+    if max_y < 46 or max_x < 135:
         return False
     return True
 
@@ -543,6 +528,7 @@ def check_for_boss(board, character):
         return True
     return False
 
+
 def game(stdscr):
     """
     Drive the game.
@@ -582,7 +568,7 @@ def game(stdscr):
     [Timer: 5 seconds – Mash 'B' to burn her completely!]
 
     """,
-        "boss_encountered" : """
+        "boss_encountered": """
         The air turns heavy. The shadows twist unnaturally. You feel it before you see it—the 
         Witchlord stands before you.
         """,
