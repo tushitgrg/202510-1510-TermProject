@@ -93,11 +93,11 @@ def describe_current_location(stdscr, board, character):
                      curses.color_pair(1))
 
     stats_win.addstr(6, 1, "HP: [", curses.color_pair(4))
-    for i in range(character['Level'] * 5):
-        if i < character["Current HP"]:
-            stats_win.addch(6, 6 + i, '♥', curses.color_pair(5))
+    for index in range(character['Level'] * 5):
+        if index < character["Current HP"]:
+            stats_win.addch(6, 6 + index, '♥', curses.color_pair(5))
         else:
-            stats_win.addch(6, 6 + i, '.', curses.color_pair(1))
+            stats_win.addch(6, 6 + index, '.', curses.color_pair(1))
 
     stats_win.addstr(6, 6 + character['Level'] * 5, f"] ({character['Current HP']}/{character['Level'] * 5})",
                      curses.color_pair(4))

@@ -11,31 +11,39 @@ from scenes import play_game_scene, play_battle_end
 def play_riddle(stdscr, character):
     riddles = [
         {
-            "description": "You enter a dimly lit room. A mysterious inscription catches your eye.\n\nWhat has keys, but no locks; space, but no room; and you can enter, but not go in?",
+            "description": """You enter a dimly lit room. A mysterious inscription catches your eye.
+            What has keys, but no locks; space, but no room; and you can enter, but not go in?""",
             "answer": ["keyboard"]
         },
         {
-            "description": "A chamber of mirrors reflects your every move, casting shifting shadows.\n\nI am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
+            "description": """A chamber of mirrors reflects your every move, casting shifting shadows.
+            I am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. 
+            What am I?""",
             "answer": ["fire"]
         },
         {
-            "description": "An ancient library with dusty scrolls surrounds you, whispering forgotten tales.\n\nThe more you take, the more you leave behind. What am I?",
+            "description": """An ancient library with dusty scrolls surrounds you, whispering forgotten tales.
+            The more you take, the more you leave behind. What am I?""",
             "answer": ["footsteps", "footstep"]
         },
         {
-            "description": "A room filled with water-worn stones and echoing whispers, ancient maps scattered about.\n\nI have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+            "description": """A room filled with water-worn stones and echoing whispers, ancient maps scattered about.
+            I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?""",
             "answer": ["map", "maps"]
         },
         {
-            "description": "A chamber bathed in soft, ethereal light, with delicate objects casting long shadows.\n\nWhat can travel around the world while staying in a corner?",
+            "description": """A chamber bathed in soft, ethereal light, with delicate objects casting long shadows.
+            What can travel around the world while staying in a corner?""",
             "answer": ["stamp", "stamps"]
         },
         {
-            "description": "A room of intricate clockwork and spinning gears, metal glinting in muted light.\n\nI am always hungry; I must always be fed. The finger I touch will soon turn red. What am I?",
+            "description": """A room of intricate clockwork and spinning gears, metal glinting in muted light.
+            I am always hungry; I must always be fed. The finger I touch will soon turn red. What am I?""",
             "answer": ["fire"]
         },
         {
-            "description": "A room filled with floating, luminescent symbols swirling in ethereal patterns.\n\nI have a head and a tail that will never meet. Having too many of me is always a treat. What am I?",
+            "description": """A room filled with floating, luminescent symbols swirling in ethereal patterns.
+            I have a head and a tail that will never meet. Having too many of me is always a treat. What am I?""",
             "answer": ["coin"]
         }
     ]
