@@ -29,7 +29,7 @@ def move_character(character, new_pos):
     character["Y-coordinate"], character["X-coordinate"] = new_pos
 
 def make_character(name):
-    character = {"X-coordinate": 0, "Y-coordinate": 0, "Current HP": 5, "Experience": 0, "Level": 3, "Name": name}
+    character = {"X-coordinate": 0, "Y-coordinate": 0, "Current HP": 5, "Experience": 0, "Level": 1, "Name": name}
     return character
 
 
