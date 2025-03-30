@@ -39,7 +39,7 @@ def make_board(rows, columns, character, boss=False):
         return board, None
 
 
-def describe_current_location(stdscr, board, character, user_name):
+def describe_current_location(stdscr, board, character):
     stdscr.clear()
 
     if not hasattr(describe_current_location, "colors_initialized"):
@@ -86,7 +86,7 @@ def describe_current_location(stdscr, board, character, user_name):
     stats_win.box()
     stats_win.addstr(0, 3, " Character Stats ", curses.A_BOLD | curses.color_pair(4))
 
-    stats_win.addstr(2, 1, f"Name: {user_name}", curses.color_pair(4))
+    stats_win.addstr(2, 1, f"Name: {character['Name']}", curses.color_pair(4))
     stats_win.addstr(3, 1, f"Level: {character['Level']}", curses.color_pair(3))
     stats_win.addstr(4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
     stats_win.addstr(5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
@@ -116,8 +116,8 @@ def describe_current_location(stdscr, board, character, user_name):
     stdscr.refresh()
 
 
-def make_character():
-    character = {"X-coordinate": 0, "Y-coordinate": 0, "Current HP": 5, "Experience": 0, "Level": 1}
+def make_character(name):
+    character = {"X-coordinate": 0, "Y-coordinate": 0, "Current HP": 5, "Experience": 0, "Level": 3, "Name": name}
     return character
 
 
@@ -210,11 +210,15 @@ def is_screen_size_ok(stdscr):
 
 def struggle_game(stdscr, message, character, boss=False):
     fire_obj = simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav")
+    keypress_obj = simpleaudio.WaveObject.from_wave_file("sounds/keypress.wav")
+    success_obj = simpleaudio.WaveObject.from_wave_file("sounds/success.wav")
+    failure_obj = simpleaudio.WaveObject.from_wave_file("sounds/failure.wav")
     play_obj = fire_obj.play()
     stdscr.clear()
     stdscr.nodelay(True)
     stdscr.timeout(100)
     curses.noecho()
+
     target_presses = 50 if boss else 30
     presses = 0
     start_time = time.time()
@@ -223,16 +227,19 @@ def struggle_game(stdscr, message, character, boss=False):
 
     lines = message.strip().split('\n')
     start_y = max(0, (max_y - len(lines)) // 2)
-
     for index, line in enumerate(lines):
         if start_y + index < max_y:
             start_x = max(0, (max_x - len(line)) // 2)
-            stdscr.addstr(start_y + index, start_x, line[:max_x - 1])
+            stdscr.addstr(start_y + index, start_x, line[:max_x - 1], curses.color_pair(1))
 
     while True:
         elapsed_time = time.time() - start_time
+
         if elapsed_time >= time_limit:
             stdscr.nodelay(False)
+            play_obj.stop()
+            failure_obj.play()
+            stdscr.clear()
             play_game_scene(stdscr, "You were too slow! You Failed. Press return/enter to continue")
             if not boss:
                 character['Current HP'] -= 1
@@ -243,20 +250,47 @@ def struggle_game(stdscr, message, character, boss=False):
         key = stdscr.getch()
         if key == ord('b') or key == ord('B'):
             presses += 1
+            keypress_obj.play()
+
+        time_percentage = (time_limit - elapsed_time) / time_limit
+        if time_percentage > 0.6:
+            bar_color = curses.color_pair(2)
+        elif time_percentage > 0.3:
+            bar_color = curses.color_pair(3)
+        else:
+            bar_color = curses.color_pair(4)
 
         progress = int((presses / target_presses) * 20)
-        bar = "[" + "=" * progress + " " * (20 - progress) + "]"
-        complete_string = f"Struggle: {bar} {presses}/{target_presses}"
-        stdscr.addstr(start_y + len(lines) + 1, max(0, (max_x - len(complete_string)) // 2), complete_string,
-                      curses.color_pair(1))
+        bar = "[" + "█" * progress + " " * (20 - progress) + "]"
+        percentage = int((presses / target_presses) * 100)
+        complete_string = f"Struggle: {bar} {presses}/{target_presses} ({percentage}%)"
+        stdscr.addstr(start_y + len(lines) + 1, max(0, (max_x - len(complete_string)) // 2),
+                      complete_string, bar_color)
+
+        if presses >= target_presses * 0.8:
+            message = "Almost there!"
+        elif elapsed_time >= time_limit * 0.8:
+            message = "Time’s almost up!"
+        else:
+            message = "Keep struggling!"
+        stdscr.addstr(start_y + len(lines) + 2, max(0, (max_x - len(message)) // 2),
+                      message, curses.color_pair(1))
+
+        remaining_time = time_limit - elapsed_time
+        time_string = f"Time left: {remaining_time:.1f} seconds"
+        stdscr.addstr(start_y + len(lines) + 3, max(0, (max_x - len(time_string)) // 2),
+                      time_string, bar_color)
 
         if presses >= target_presses:
             stdscr.nodelay(False)
+            play_obj.stop()
+            success_obj.play()
             if not boss:
                 play_battle_end(stdscr, character, "burn")
             break
 
         stdscr.refresh()
+
     play_obj.stop()
     stdscr.nodelay(False)
 
@@ -473,6 +507,9 @@ def get_user_battle_decision(stdscr):
     curses.echo()
     input_decision = ""
     while not input_decision.strip().lower() in ["burn", "flee"]:
+        stdscr.move(max_y - 2, 0)
+        stdscr.clrtoeol()
+        stdscr.refresh()
         input_decision = stdscr.getstr(max_y - 2, 0).decode("utf-8")
     return input_decision.strip().lower()
 
@@ -533,11 +570,13 @@ def game(stdscr):
     """
     Drive the game.
     """
+    start_jigsaw_game(stdscr)
     rows = 15
     columns = 30
-    character = make_character()
     music_obj = simpleaudio.WaveObject.from_wave_file("sounds/game-music.wav")
     play_obj = music_obj.play()
+    input_name = welcome_user_and_ask_for_name(stdscr)
+    character = make_character(input_name)
     board, goal_position = make_board(rows, columns, character)
     achieved_goal = False
     character_alive = True
@@ -547,7 +586,7 @@ def game(stdscr):
         stdscr.addstr(2, 0, "Press any key to exit")
         stdscr.getkey()
         return
-    input_name = welcome_user_and_ask_for_name(stdscr)
+
     game_dialogues = {
         "intro": f"""
     Night falls over the cursed realm of Ashenvale,
@@ -579,12 +618,11 @@ def game(stdscr):
             """
     }
     play_game_scene(stdscr, game_dialogues["intro"])
-    # start_jigsaw_game(stdscr)
     while character_alive and not achieved_goal:
         if not play_obj.is_playing():
             play_obj = music_obj.play()
 
-        describe_current_location(stdscr, board, character, input_name)
+        describe_current_location(stdscr, board, character)
         direction = get_user_choice(stdscr, rows + 4)
         if direction is None:
             break
@@ -594,7 +632,7 @@ def game(stdscr):
                 move_enemies(board, character)
             move_character(character, new_pos)
 
-            describe_current_location(stdscr, board, character, input_name)
+            describe_current_location(stdscr, board, character)
             there_is_a_challenger = check_for_foe(board, character)
             if goal_position:
                 achieved_goal = check_if_goal_attained(goal_position, character)
@@ -605,7 +643,7 @@ def game(stdscr):
                     else:
                         start_jigsaw_game(stdscr)
                         board, goal_position = make_board(rows, columns, character, boss=True)
-                    describe_current_location(stdscr, board, character, input_name)
+                    describe_current_location(stdscr, board, character)
 
                 stdscr.refresh()
                 achieved_goal = False
