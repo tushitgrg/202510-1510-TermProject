@@ -16,4 +16,4 @@ tushitgrg
 ## Any important comments you'd like to make about your work:
 Please wear headphones while playing the game for best experience.
 Please Use the Native terminal on your MAC/LINUX. Before starting the game, Please ensure the window size is atleast
-45 rows, and at least 100 columns. The Game Might crash, if the window size is less.
+46 rows, and at least 136 columns. The Game Might crash, if the window size is less.
