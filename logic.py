@@ -28,20 +28,10 @@ def validate_move(board, character, direction):
     return False, None
 
 
-
-
-
-
 def check_if_goal_attained(goal_position, character):
     if character["X-coordinate"] == goal_position[1] and character["Y-coordinate"] == goal_position[0]:
         return True
     return False
-
-
-
-
-
-
 
 
 def move_enemies(board, character):
@@ -64,7 +54,6 @@ def move_enemies(board, character):
                 break
 
 
-
 def check_for_boss(board, character):
     x_pos = character["X-coordinate"]
     y_pos = character["Y-coordinate"]
@@ -72,4 +61,3 @@ def check_for_boss(board, character):
         board[(y_pos, x_pos)] = "space"
         return True
     return False
-

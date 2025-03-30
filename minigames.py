@@ -62,6 +62,7 @@ def play_riddle(stdscr, character):
         character["Current HP"] -= 1
     curses.noecho()
 
+
 def struggle_game(stdscr, message, character, boss=False):
     fire_obj = simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav")
     keypress_obj = simpleaudio.WaveObject.from_wave_file("sounds/keypress.wav")
@@ -147,4 +148,3 @@ def struggle_game(stdscr, message, character, boss=False):
 
     play_obj.stop()
     stdscr.nodelay(False)
-

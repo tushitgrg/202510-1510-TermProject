@@ -32,12 +32,10 @@ def game(stdscr):
         stdscr.addstr(2, 0, "Press any key to exit")
         stdscr.getkey()
         return
-
     play_game_scene(stdscr, get_game_dialogue("intro", input_name))
     while character_alive and not achieved_goal:
         if not play_obj.is_playing():
             play_obj = music_obj.play()
-
         describe_current_location(stdscr, board, character)
         direction = get_user_choice(stdscr, rows + 4)
         if direction is None:
@@ -47,7 +45,6 @@ def game(stdscr):
             if character["Level"] < 3:
                 move_enemies(board, character)
             move_character(character, new_pos)
-
             describe_current_location(stdscr, board, character)
             there_is_a_challenger = check_for_foe(board, character)
             if goal_position:
@@ -60,7 +57,6 @@ def game(stdscr):
                         start_jigsaw_game(stdscr)
                         board, goal_position = make_board(rows, columns, character, boss=True)
                     describe_current_location(stdscr, board, character)
-
                 stdscr.refresh()
                 achieved_goal = False
             if check_for_boss(board, character):
@@ -68,16 +64,13 @@ def game(stdscr):
                 if is_alive(character):
                     play_animation_fire(stdscr, True)
                     break
-
             if there_is_a_challenger:
                 if get_user_battle_decision(stdscr) == "burn":
                     struggle_game(stdscr, get_game_dialogue("enemy_encountered", input_name), character)
                 else:
                     play_battle_end(stdscr, character, "flee")
                 stdscr.getkey()
-
             character_alive = is_alive(character)
-
             if not character_alive:
                 play_animation_fire(stdscr, False)
                 break
@@ -86,7 +79,6 @@ def game(stdscr):
             stdscr.addstr(rows + 6, 0, "You cant go in that direction lol")
             stdscr.refresh()
             stdscr.getkey()
-
     play_game_scene(stdscr, get_game_dialogue("game_over", input_name))
 
 

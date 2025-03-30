@@ -25,8 +25,10 @@ def is_alive(character):
         return True
     return False
 
+
 def move_character(character, new_pos):
     character["Y-coordinate"], character["X-coordinate"] = new_pos
+
 
 def make_character(name):
     character = {"X-coordinate": 0, "Y-coordinate": 0, "Current HP": 5, "Experience": 0, "Level": 1, "Name": name}
@@ -39,4 +41,3 @@ def check_and_level_up(character, stdscr):
         character['Experience'] -= character['Level'] * 200
         character['Level'] += 1
         character['Current HP'] = 5 * character['Level']
-

@@ -3,7 +3,6 @@ import curses
 import random
 
 
-
 def init_puzzle(rows, cols):
     pieces = list(range(1, rows * cols + 1))
     random.shuffle(pieces)

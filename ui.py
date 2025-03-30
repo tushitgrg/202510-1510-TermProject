@@ -32,6 +32,7 @@ def get_user_battle_decision(stdscr):
         input_decision = stdscr.getstr(max_y - 2, 0).decode("utf-8")
     return input_decision.strip().lower()
 
+
 def welcome_user_and_ask_for_name(stdscr):
     welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
@@ -58,6 +59,7 @@ def welcome_user_and_ask_for_name(stdscr):
     stdscr.refresh()
     return get_user_name(stdscr)
 
+
 def is_screen_size_ok(stdscr):
     max_y, max_x = stdscr.getmaxyx()
     if max_y < 46 or max_x < 135:
@@ -78,6 +80,7 @@ def get_user_choice(stdscr, prompt_y):
             stdscr.addstr(prompt_y + 1, 0, "Invalid Move!! ")
             stdscr.refresh()
     return input_direction
+
 
 def get_user_name(stdscr):
     max_y, max_x = stdscr.getmaxyx()

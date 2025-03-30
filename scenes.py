@@ -19,6 +19,7 @@ def play_game_scene(stdscr, message):
     stdscr.refresh()
     stdscr.getkey()
 
+
 def play_animation_fire(stdscr, if_won):
     won_message = pyfiglet.figlet_format("You Survived!")
     lost_message = pyfiglet.figlet_format("You Lost!")
@@ -60,9 +61,6 @@ def play_animation_fire(stdscr, if_won):
         if stdscr.getch() == 10:
             break
     stdscr.nodelay(False)
-
-
-
 
 
 def play_battle_end(stdscr, character, user_decison):
