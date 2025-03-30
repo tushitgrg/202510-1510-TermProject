@@ -80,34 +80,14 @@ def get_ascii_picture():
     ]
 
 
-def init_puzzle():
-    rows, cols = 3, 3
-    grid = []
-    for row in range(rows):
-        grid_row = []
-        for col in range(cols):
-            idx = row * cols + col
-            grid_row.append((idx, idx))
-        grid.append(grid_row)
-
-    pieces = [(piece_idx, pos) for row in grid for piece_idx, pos in row]
+def init_puzzle(rows, cols):
+    pieces = [(num, num) for num in range(rows * cols)]
     random.shuffle(pieces)
-
-    while pieces == [(i, i) for i in range(rows * cols)]:
-        random.shuffle(pieces)
-
-    grid = []
-    for row in range(rows):
-        grid_row = []
-        for col in range(cols):
-            grid_row.append(pieces[row * cols + col])
-        grid.append(grid_row)
-
+    grid = [pieces[row * cols:(row + 1) * cols] for row in range(rows)]
     return grid
 
 
-def is_solved(grid):
-    rows, cols = 3, 3
+def is_solved(grid, rows, cols):
     for row in range(rows):
         for col in range(cols):
             piece_idx, pos = grid[row][col]
@@ -121,10 +101,9 @@ def is_piece_in_correct_position(grid, row, col):
     return pos == row * 3 + col
 
 
-def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture):
+def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols):
     stdscr.clear()
     height, width = stdscr.getmaxyx()
-    rows, cols = 3, 3
     piece_height = 5
     piece_width = 5
     grid_height = rows * (piece_height + 1)
@@ -160,14 +139,14 @@ def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture):
 
         stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
 
-    help_text = "WASD=Move | ENTER=Select/Swap | Q=Quit"
+    help_text = "WASD=Move | ENTER=Select/Swap"
     stdscr.addstr(start_y + grid_height + 2, start_x + (grid_width - len(help_text)) // 2, help_text)
 
     stdscr.refresh()
 
 
-
 def start_jigsaw_game(stdscr):
+    rows, cols = 3, 3
     curses.curs_set(0)
     stdscr.nodelay(False)
     stdscr.keypad(True)
@@ -182,15 +161,14 @@ def start_jigsaw_game(stdscr):
     }
 
     ascii_picture = get_ascii_picture()
-    grid = init_puzzle()
+    grid = init_puzzle(rows, cols)
     cursor = (0, 0)
     selected = None
-    move_count = 0
 
     while True:
-        draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture)
+        draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
 
-        if is_solved(grid):
+        if is_solved(grid, rows, cols):
             break
 
         key = stdscr.getch()
@@ -215,6 +193,5 @@ def start_jigsaw_game(stdscr):
                     grid[selected_y][selected_x], grid[cursor_y][cursor_x] = grid[cursor_y][cursor_x], grid[selected_y][
                         selected_x]
                     selected = None
-                    move_count += 1
 
         cursor = (cursor_y, cursor_x)
