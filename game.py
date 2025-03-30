@@ -570,7 +570,6 @@ def game(stdscr):
     """
     Drive the game.
     """
-    start_jigsaw_game(stdscr)
     rows = 15
     columns = 30
     music_obj = simpleaudio.WaveObject.from_wave_file("sounds/game-music.wav")
