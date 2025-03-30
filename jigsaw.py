@@ -1,91 +1,220 @@
-import math
 import curses
 import random
+import itertools
 
 
-def init_puzzle(rows, cols):
-    pieces = list(range(1, rows * cols + 1))
+def init_colors():
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_CYAN)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+
+
+def get_ascii_picture():
+    return [
+        [
+            "     ",
+            "  _  ",
+            " / \\_",
+            "/    ",
+            "|    "
+        ],
+        [
+            "     ",
+            "___  ",
+            "   \\_",
+            "     ",
+            "     "
+        ],
+        [
+            "     ",
+            "     ",
+            "_    ",
+            " \\   ",
+            "  \\  "
+        ],
+        [
+            "|    ",
+            "|    ",
+            "| O  ",
+            "|    ",
+            "\\    "
+        ],
+        [
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "
+        ],
+        [
+            "     ",
+            "     ",
+            "  O  ",
+            "     ",
+            "    /"
+        ],
+        [
+            " \\   ",
+            "  \\  ",
+            "   \\ ",
+            "    \\",
+            "     "
+        ],
+        [
+            "     ",
+            "     ",
+            "     ",
+            "\\___/",
+            "     "
+        ],
+        [
+            "   / ",
+            "  /  ",
+            " /   ",
+            "/    ",
+            "     "
+        ]
+    ]
+
+
+def init_puzzle():
+    rows, cols = 3, 3
+    grid = []
+    for row in range(rows):
+        grid_row = []
+        for col in range(cols):
+            idx = row * cols + col
+            grid_row.append((idx, idx))
+        grid.append(grid_row)
+
+    pieces = [(piece_idx, pos) for row in grid for piece_idx, pos in row]
     random.shuffle(pieces)
-    grid = [pieces[index * cols:(index + 1) * cols] for index in range(rows)]
+
+    while pieces == [(i, i) for i in range(rows * cols)]:
+        random.shuffle(pieces)
+
+    grid = []
+    for row in range(rows):
+        grid_row = []
+        for col in range(cols):
+            grid_row.append(pieces[row * cols + col])
+        grid.append(grid_row)
+
     return grid
 
 
-def draw_grid(stdscr, grid, cursor, selected, rows, cols):
-    stdscr.clear()
-    height, weight = stdscr.getmaxyx()
-    grid_h = rows * 3
-    grid_w = cols * 7
-    start_y = max((height - grid_h) // 2, 0)
-    start_x = max((weight - grid_w) // 2, 0)
-
+def is_solved(grid):
+    rows, cols = 3, 3
     for row in range(rows):
         for col in range(cols):
-            piece = grid[row][col]
-            cell_y = start_y + row * 3
-            cell_x = start_x + col * 7
-
-            if (row, col) == cursor:
-                attr = curses.A_REVERSE
-            else:
-                attr = curses.A_NORMAL
-
-            if selected and (row, col) == selected:
-                attr |= curses.A_UNDERLINE
-
-            stdscr.addstr(cell_y, cell_x, "+-----+", attr)
-            stdscr.addstr(cell_y + 1, cell_x, f"| {piece:2d}  |", attr)
-            stdscr.addstr(cell_y + 2, cell_x, "+-----+", attr)
-    message_text = "Use WASD to move, ENTER to select/swap, 'q' to quit."
-    stdscr.addstr(start_y + grid_h + 1, start_x - math.floor(len(message_text) / 2), message_text)
-    stdscr.refresh()
-
-
-def is_solved(grid, rows, cols):
-    count = 1
-    for row in range(rows):
-        for col in range(cols):
-            if grid[row][col] != count:
+            piece_idx, pos = grid[row][col]
+            if pos != row * cols + col:
                 return False
-            count += 1
     return True
 
 
-def start_jigsaw_game(stdscr):
+def is_piece_in_correct_position(grid, row, col):
+    piece_idx, pos = grid[row][col]
+    return pos == row * 3 + col
+
+
+def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture):
+    stdscr.clear()
+    height, width = stdscr.getmaxyx()
     rows, cols = 3, 3
+    piece_height = 5
+    piece_width = 5
+    grid_height = rows * (piece_height + 1)
+    grid_width = cols * (piece_width + 3)
+    start_y = max((height - grid_height) // 2, 0)
+    start_x = max((width - grid_width) // 2, 0)
+
+    title = "SOLVE THE PUZZLE"
+    stdscr.addstr(start_y - 2, start_x + (grid_width - len(title)) // 2, title,
+                  curses.color_pair(colors["message"]) | curses.A_BOLD)
+
+    for row, col in itertools.product(range(rows), range(cols)):
+        piece_idx, pos = grid[row][col]
+        cell_y = start_y + row * (piece_height + 1)
+        cell_x = start_x + col * (piece_width + 3)
+        if (row, col) == cursor and (row, col) == selected:
+            attr = curses.color_pair(colors["selected"]) | curses.A_BOLD
+        elif (row, col) == cursor:
+            attr = curses.color_pair(colors["cursor"])
+        elif (row, col) == selected:
+            attr = curses.color_pair(colors["selected"])
+        elif is_piece_in_correct_position(grid, row, col):
+            attr = curses.color_pair(colors["correct"])
+        else:
+            attr = curses.color_pair(colors["normal"])
+
+        stdscr.addstr(cell_y, cell_x, "+-----+", attr)
+
+        art_piece = ascii_picture[piece_idx]
+        for i, line in enumerate(art_piece):
+            if i < piece_height:
+                stdscr.addstr(cell_y + i + 1, cell_x, f"|{line}|", attr)
+
+        stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
+
+    help_text = "WASD=Move | ENTER=Select/Swap | Q=Quit"
+    stdscr.addstr(start_y + grid_height + 2, start_x + (grid_width - len(help_text)) // 2, help_text)
+
+    stdscr.refresh()
+
+
+
+def start_jigsaw_game(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(False)
     stdscr.keypad(True)
+    if curses.has_colors():
+        init_colors()
+    colors = {
+        "normal": 1,
+        "selected": 2,
+        "cursor": 3,
+        "correct": 4,
+        "message": 5
+    }
 
-    grid = init_puzzle(rows, cols)
+    ascii_picture = get_ascii_picture()
+    grid = init_puzzle()
     cursor = (0, 0)
     selected = None
+    move_count = 0
 
     while True:
-        draw_grid(stdscr, grid, cursor, selected, rows, cols)
-        if is_solved(grid, rows, cols):
+        draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture)
+
+        if is_solved(grid):
             break
 
         key = stdscr.getch()
+        cursor_y, cursor_x = cursor
 
-        if key in (ord('q'), ord('Q')):
-            break
-        y_cord, x_cord = cursor
-        if key in (ord('w'), ord('W')) and y_cord > 0:
-            y_cord -= 1
-        elif key in (ord('s'), ord('S')) and y_cord < rows - 1:
-            y_cord += 1
-        elif key in (ord('a'), ord('A')) and x_cord > 0:
-            x_cord -= 1
-        elif key in (ord('d'), ord('D')) and x_cord < cols - 1:
-            x_cord += 1
+        if key in (ord('w'), ord('W')) and cursor_y > 0:
+            cursor_y -= 1
+        elif key in (ord('s'), ord('S')) and cursor_y < 2:
+            cursor_y += 1
+        elif key in (ord('a'), ord('A')) and cursor_x > 0:
+            cursor_x -= 1
+        elif key in (ord('d'), ord('D')) and cursor_x < 2:
+            cursor_x += 1
         elif key in (curses.KEY_ENTER, 10, 13):
             if not selected:
-                selected = (y_cord, x_cord)
+                selected = (cursor_y, cursor_x)
             else:
-                if selected == (y_cord, x_cord):
+                if selected == (cursor_y, cursor_x):
                     selected = None
                 else:
-                    sy, sx = selected
-                    grid[sy][sx], grid[y_cord][x_cord] = grid[y_cord][x_cord], grid[sy][sx]
+                    selected_y, selected_x = selected
+                    grid[selected_y][selected_x], grid[cursor_y][cursor_x] = grid[cursor_y][cursor_x], grid[selected_y][
+                        selected_x]
                     selected = None
-        cursor = (y_cord, x_cord)
+                    move_count += 1
+
+        cursor = (cursor_y, cursor_x)
