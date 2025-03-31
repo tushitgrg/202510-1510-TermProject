@@ -5,6 +5,7 @@ import random
 
 
 def play_game_scene(stdscr, message):
+    curses.noecho()
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
 
@@ -17,7 +18,17 @@ def play_game_scene(stdscr, message):
             stdscr.addstr(start_y + index, start_x, line[:max_x - 1])
 
     stdscr.refresh()
-    stdscr.getkey()
+    while True:
+        if stdscr.getch() == 10:
+            break
+
+
+def initialise_colors_for_fire():
+    curses.start_color()
+    curses.init_pair(1, 0, 0)
+    curses.init_pair(2, 1, 0)
+    curses.init_pair(3, 3, 0)
+    curses.init_pair(4, 4, 0)
 
 
 def play_animation_fire(stdscr, if_won):
@@ -30,11 +41,8 @@ def play_animation_fire(stdscr, if_won):
     lines = message.strip().split('\n')
 
     curses.curs_set(0)
-    curses.start_color()
-    curses.init_pair(1, 0, 0)
-    curses.init_pair(2, 1, 0)
-    curses.init_pair(3, 3, 0)
-    curses.init_pair(4, 4, 0)
+    initialise_colors_for_fire()
+
     stdscr.clear()
     num_arr = [0 for _ in range(size + width + 1)]
 
@@ -72,7 +80,7 @@ def play_battle_end(stdscr, character, user_decison):
              {innocent_art}
              She vanishes into mist. A strange warmth fills your soul. 
              You gained {character["Level"] * 30} Exp
-             Press any [key] to return
+             Press Enter/Return to continue
                 """
             character["Experience"] += character["Level"] * 30
 
@@ -81,7 +89,7 @@ def play_battle_end(stdscr, character, user_decison):
                         {innocent_art}
                          As the flames rise, her final words whisper through your mind. 
                         You lost {character["Level"] * 30} Exp
-                        Press any [key] to return
+                        Press Enter/Return to continue
                             """
             character["Experience"] = max(0, character["Experience"] - character["Level"] * 30)
     else:
@@ -91,7 +99,7 @@ def play_battle_end(stdscr, character, user_decison):
                 {not_innocent_art}
                  A distant cackle. The village burns. You feel weaker.
                 You lost {character["Level"] * 30} Exp
-                Press any [key] to return
+                Press Enter/Return to continue
                 """
             character["Experience"] = max(0, character["Experience"] - character["Level"] * 30)
         else:
@@ -99,7 +107,7 @@ def play_battle_end(stdscr, character, user_decison):
                        {not_innocent_art}
                         A shriek echoes. The curse lifts. You are safe... for now.
                        You gained {character["Level"] * 30} Exp
-                       Press any [key] to return
+                       Press Enter/Return to continue
                        """
             character["Experience"] += character["Level"] * 30
 
@@ -115,7 +123,7 @@ def get_game_dialogue(name, user_name):
     by the Grand Council of Purity. Your sacred duty: eradicate the witches
     that plague these lands with the holy flames of justice.
 
-    [Press ENTER to begin your hunt.]
+    [Press ENTER/RETURN to begin your hunt.]
 
 
         """,
@@ -134,7 +142,7 @@ def get_game_dialogue(name, user_name):
         "game_over": f"""
     {pyfiglet.figlet_format("Game Over!")}  
 
-     Press any Key to Quit the Game
+     Press Enter/Return to quit the game
             """
     }
     if name in game_dialogues:

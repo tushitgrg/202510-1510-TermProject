@@ -17,8 +17,8 @@ def game(stdscr):
     """
     Drive the game.
     """
-    rows = 15
-    columns = 30
+    rows = 25
+    columns = 38
     music_obj = simpleaudio.WaveObject.from_wave_file("sounds/game-music.wav")
     play_obj = music_obj.play()
     input_name = welcome_user_and_ask_for_name(stdscr)

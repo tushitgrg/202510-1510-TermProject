@@ -64,12 +64,20 @@ def play_riddle(stdscr, character):
     while not input_answer.strip():
         input_answer = stdscr.getstr(start_y + len(lines) + 1, 20).decode("utf-8").lower()
     if input_answer in riddle["answer"]:
-        play_game_scene(stdscr, "You answered correctly. \n The wall slides open, revealing a mysterious passage!")
+        play_game_scene(stdscr,
+                        "You answered correctly. \n The wall slides open, revealing a mysterious passage! \n Press Enter/Return to continue")
     else:
-        play_game_scene(stdscr, "You answered Wrong. \n You loose 1 HP")
+        play_game_scene(stdscr, "You answered Wrong. \n You loose 1 HP \n Press Enter/Return to continue")
         character["Current HP"] -= 1
     curses.noecho()
 
+def get_bar_color(time_percentage):
+    if time_percentage > 0.6:
+        return curses.color_pair(2)
+    elif time_percentage > 0.3:
+        return curses.color_pair(3)
+    else:
+        return curses.color_pair(4)
 
 def struggle_game(stdscr, message, character, boss=False):
     fire_obj = simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav")
@@ -116,13 +124,7 @@ def struggle_game(stdscr, message, character, boss=False):
             keypress_obj.play()
 
         time_percentage = (time_limit - elapsed_time) / time_limit
-        if time_percentage > 0.6:
-            bar_color = curses.color_pair(2)
-        elif time_percentage > 0.3:
-            bar_color = curses.color_pair(3)
-        else:
-            bar_color = curses.color_pair(4)
-
+        bar_color = get_bar_color(time_percentage)
         progress = int((presses / target_presses) * 20)
         bar = "[" + "█" * progress + " " * (20 - progress) + "]"
         percentage = int((presses / target_presses) * 100)

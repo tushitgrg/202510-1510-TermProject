@@ -37,7 +37,7 @@ def make_character(name):
 
 def check_and_level_up(character, stdscr):
     if character['Experience'] >= character['Level'] * 200:
-        play_game_scene(stdscr, "New Achievement: You Just Levelled Up!")
+        play_game_scene(stdscr, "New Achievement: You Just Levelled Up! \n Press Enter/Return to continue")
         character['Experience'] -= character['Level'] * 200
         character['Level'] += 1
         character['Current HP'] = 5 * character['Level']
