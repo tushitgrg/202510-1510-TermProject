@@ -17,8 +17,13 @@ def game(stdscr):
     """
     Drive the game.
     """
-    rows = 25
-    columns = 38
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    rows = 37
+    columns = 37
     music_obj = simpleaudio.WaveObject.from_wave_file("sounds/game-music.wav")
     play_obj = music_obj.play()
     input_name = welcome_user_and_ask_for_name(stdscr)
@@ -27,17 +32,13 @@ def game(stdscr):
     achieved_goal = False
     character_alive = True
     stdscr.clear()
-    if not is_screen_size_ok(stdscr):
-        stdscr.addstr(0, 0, "Please Increase your window size and try again")
-        stdscr.addstr(2, 0, "Press any key to exit")
-        stdscr.getkey()
-        return
+
     play_game_scene(stdscr, get_game_dialogue("intro", input_name))
     while character_alive and not achieved_goal:
         if not play_obj.is_playing():
             play_obj = music_obj.play()
         describe_current_location(stdscr, board, character)
-        direction = get_user_choice(stdscr, rows + 4)
+        direction = get_user_choice(stdscr, 38)
         if direction is None:
             break
         valid_move, new_pos = validate_move(board, character, direction)
@@ -76,7 +77,7 @@ def game(stdscr):
                 break
             check_and_level_up(character, stdscr)
         else:
-            stdscr.addstr(rows + 6, 0, "You cant go in that direction lol")
+            stdscr.addstr(38, 2, "You cant go in that direction lol")
             stdscr.refresh()
             stdscr.getkey()
     play_game_scene(stdscr, get_game_dialogue("game_over", input_name))

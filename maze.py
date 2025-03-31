@@ -38,7 +38,8 @@ def make_board(rows, columns, character, boss=False):
     else:
         return board, None
 
-def print_game_stats(stdscr, character):
+
+def print_game_stats(stdscr, character, ascii_chars):
     max_y, max_x = stdscr.getmaxyx()
     rank_names = {
         1: "Novice Inquisitor",
@@ -46,29 +47,55 @@ def print_game_stats(stdscr, character):
         3: "Grand Arbiter of Fire",
         4: "The Hand of Divine Wrath"
     }
-    stats_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, int(max_x / 2) - 1)
-    stats_win.box()
-    stats_win.addstr(0, 3, " Character Stats ", curses.A_BOLD | curses.color_pair(4))
+    stats_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, 0)
 
-    stats_win.addstr(2, 1, f"Name: {character['Name']}", curses.color_pair(4))
-    stats_win.addstr(3, 1, f"Level: {character['Level']}", curses.color_pair(3))
-    stats_win.addstr(4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
-    stats_win.addstr(5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
+    stats_win.box()
+    game_name_art = """
+    
+    ██╗███╗░░██╗███████╗███████╗██████╗░███╗░░██╗░█████╗░
+    ██║████╗░██║██╔════╝██╔════╝██╔══██╗████╗░██║██╔══██╗
+    ██║██╔██╗██║█████╗░░█████╗░░██████╔╝██╔██╗██║██║░░██║
+    ██║██║╚████║██╔══╝░░██╔══╝░░██╔══██╗██║╚████║██║░░██║
+    ██║██║░╚███║██║░░░░░███████╗██║░░██║██║░╚███║╚█████╔╝
+    ╚═╝╚═╝░░╚══╝╚═╝░░░░░╚══════╝╚═╝░░╚═╝╚═╝░░╚══╝░╚════╝░
+    
+    ████████╗██████╗░██╗░█████╗░██╗░░░░░░██████╗
+    ╚══██╔══╝██╔══██╗██║██╔══██╗██║░░░░░██╔════╝
+    ░░░██║░░░██████╔╝██║███████║██║░░░░░╚█████╗░
+    ░░░██║░░░██╔══██╗██║██╔══██║██║░░░░░░╚═══██╗
+    ░░░██║░░░██║░░██║██║██║░░██║███████╗██████╔╝
+    ░░░╚═╝░░░╚═╝░░╚═╝╚═╝╚═╝░░╚═╝╚══════╝╚═════╝░
+"""
+
+    stats_win.addstr(0, 3, " Character Stats ", curses.A_BOLD | curses.color_pair(4))
+    lines = game_name_art.split('\n')
+    for index, line in enumerate(lines):
+        stats_win.addstr(index, 10, line)
+    start_point = 2 + len(lines)
+    stats_win.addstr(start_point + 2, 1, f"Name: {character['Name']}", curses.color_pair(4))
+    stats_win.addstr(start_point + 3, 1, f"Level: {character['Level']}", curses.color_pair(3))
+    stats_win.addstr(start_point + 4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
+    stats_win.addstr(start_point + 5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
                      curses.color_pair(1))
 
-    stats_win.addstr(6, 1, "HP: [", curses.color_pair(4))
+    stats_win.addstr(start_point + 6, 1, "HP: [", curses.color_pair(4))
     for index in range(character['Level'] * 5):
         if index < character["Current HP"]:
-            stats_win.addch(6, 6 + index, '♥', curses.color_pair(5))
+            stats_win.addch(start_point + 6, 6 + index, '♥', curses.color_pair(5))
         else:
-            stats_win.addch(6, 6 + index, '.', curses.color_pair(1))
+            stats_win.addch(start_point + 6, 6 + index, '.', curses.color_pair(1))
 
-    stats_win.addstr(6, 6 + character['Level'] * 5, f"] ({character['Current HP']}/{character['Level'] * 5})",
+    stats_win.addstr(start_point + 6, 6 + character['Level'] * 5,
+                     f"] ({character['Current HP']}/{character['Level'] * 5})",
                      curses.color_pair(4))
 
-    stats_win.addstr(8, 1, "Controls:", curses.color_pair(4))
-    stats_win.addstr(9, 1, "W/A/S/D: Move", curses.color_pair(4))
-    stats_win.addstr(10, 1, "Q: Quit", curses.color_pair(4))
+    stats_win.addstr(start_point + 8, 1, "Controls:", curses.color_pair(4))
+    stats_win.addstr(start_point + 9, 1, "W/A/S/D: Move", curses.color_pair(4))
+    stats_win.addstr(start_point + 10, 1, "Q: Quit", curses.color_pair(4))
+
+    for index, (key, value) in enumerate(ascii_chars.items()):
+        if key != "space":
+            stats_win.addstr(start_point + 11 + index, 1, f"{value['char']} - {key if key!='Goal' else 'Portal'}", value['attr'])
 
 
 def describe_current_location(stdscr, board, character):
@@ -97,7 +124,7 @@ def describe_current_location(stdscr, board, character):
     board_copy[(character["Y-coordinate"], character["X-coordinate"])] = 'character'
 
     max_y, max_x = stdscr.getmaxyx()
-    map_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, 0)
+    map_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, int(max_x / 2) - 1)
     map_win.box()
     map_win.addstr(0, 3, " Dungeon Map ", curses.A_BOLD)
 
@@ -105,7 +132,7 @@ def describe_current_location(stdscr, board, character):
         details = ascii_chars.get(description, {"char": "?", "attr": curses.color_pair(4)})
         map_win.addstr(row + 1, 1 + column * 2, details['char'], details['attr'])
 
-    print_game_stats(stdscr, character)
+    print_game_stats(stdscr, character, ascii_chars)
 
     heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
     if board[(character["Y-coordinate"], character["X-coordinate"])] == "heal":
@@ -115,4 +142,3 @@ def describe_current_location(stdscr, board, character):
             board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
 
     stdscr.refresh()
-

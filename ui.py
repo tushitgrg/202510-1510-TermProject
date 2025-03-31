@@ -54,7 +54,7 @@ def welcome_user_and_ask_for_name(stdscr):
             stdscr.addstr(start_y + counter_x, start_x, line[:counter_j], curses.color_pair(3))
 
             stdscr.refresh()
-            time.sleep(0.007)
+            # time.sleep(0.007)
 
     stdscr.refresh()
     return get_user_name(stdscr)
@@ -77,7 +77,7 @@ def get_user_choice(stdscr, prompt_y):
         elif key == 'q':
             return None
         else:
-            stdscr.addstr(prompt_y + 1, 0, "Invalid Move!! ")
+            stdscr.addstr(prompt_y, 2, "Invalid Move!! ")
             stdscr.refresh()
     return input_direction
 
