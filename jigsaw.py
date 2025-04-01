@@ -4,6 +4,14 @@ import itertools
 
 
 def init_colors():
+    """
+    Initialize color pairs for the jigsaw game.
+
+    This function sets up color pairs for different elements in the jigsaw game.
+
+    :precondition: curses must be initialized
+    :postcondition: initialize colors for different elements of the game
+    """
     curses.start_color()
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_CYAN)
@@ -13,6 +21,14 @@ def init_colors():
 
 
 def get_ascii_picture():
+    """
+    Get a list of ASCII arts used for the puzzle pieces.
+
+    :return: a list of ASCII arts for the puzzle
+
+    >>> len(get_ascii_picture())
+    9
+    """
     return [
         [
             "     ",
@@ -81,6 +97,15 @@ def get_ascii_picture():
 
 
 def init_puzzle(rows, cols):
+    """
+    Initialize the jigsaw puzzle by creating a shuffled grid of pieces.
+
+    :param rows: the number of rows in the puzzle
+    :param cols: the number of columns in the puzzle
+    :precondition: rows and cols must be positive integers
+    :postcondition: generate a shuffled list of lists, each containing tuples of two integers less than rows and cols
+    :return: a list of lists, each containing tuples of two integers
+    """
     pieces = [(num, num) for num in range(rows * cols)]
     random.shuffle(pieces)
     grid = [pieces[row * cols:(row + 1) * cols] for row in range(rows)]
@@ -88,6 +113,26 @@ def init_puzzle(rows, cols):
 
 
 def is_solved(grid, rows, cols):
+    """
+    Check if the puzzle is solved.
+
+    This function checks if each piece is in its correct position, that is, the puzzle is solved.
+
+    :param grid: a list representing the current state of the puzzle grid
+    :param rows: the number of rows in the puzzle
+    :param cols: the number of columns in the puzzle
+    :precondition: grid must be a list of lists, each containing tuples of two integers representing the puzzle
+    :postcondition: determine if the puzzle is solved
+    :return: a boolean, True if the puzzle is solved, False otherwise
+
+    >>> test_grid = [[(0, 0), (1, 1)], [(2, 2), (3, 3)]]
+    >>> is_solved(test_grid, 2, 2)
+    True
+
+    >>> test_grid = [[(2, 2), (3, 3)], [(0, 0), (1, 1)]]
+    >>> is_solved(test_grid, 2, 2)
+    False
+    """
     for row in range(rows):
         for col in range(cols):
             piece_idx, pos = grid[row][col]
@@ -97,11 +142,46 @@ def is_solved(grid, rows, cols):
 
 
 def is_piece_in_correct_position(grid, row, col):
+    """
+    Check if a piece is in its correct position.
+
+    :param grid: a list representing the current state of the puzzle grid
+    :param row: the row index of the piece
+    :param col: the column index of the piece
+    :precondition: grid must be a list of lists, each containing tuples of two integers representing the puzzle
+    :postcondition: determine if the piece is in the correct position
+    :return: a boolean, True if the piece is in the correct position, False otherwise
+
+    >>> test_grid = [[(0, 0), (1, 1)], [(2, 2), (3, 3)]]
+    >>> is_piece_in_correct_position(test_grid, 0, 0)
+    True
+
+    >>> test_grid = [[(1, 1), (0, 0)], [(2, 2), (3, 3)]]
+    >>> is_piece_in_correct_position(test_grid, 0, 1)
+    False
+    """
     piece_idx, pos = grid[row][col]
     return pos == row * 3 + col
 
 
 def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols):
+    """
+    Draw the puzzle grid on the screen using curses.
+
+    This function handles the display of the puzzle grid, pieces, cursor, and selected pieces.
+
+    :param stdscr: a curses window object
+    :param grid: a list representing the current state of the puzzle grid
+    :param cursor: a tuple representing the current cursor position
+    :param selected: a tuple representing the currently selected puzzle piece or None if nothing is selected
+    :param colors: a dictionary with color descriptions as keys and cursor color pairs as value
+    :param ascii_picture: a list of ASCII arts for the puzzle pieces
+    :param rows: the number of rows in the puzzle
+    :param cols: the number of columns in the puzzle
+    :precondition: stdscr must be a valid curses window object
+    :precondition: grid must be a list of lists, each containing tuples of two integers representing the puzzle
+    :postcondition: draw the puzzle grid and update the screen
+    """
     stdscr.clear()
     height, width = stdscr.getmaxyx()
     piece_height = 5
@@ -146,6 +226,16 @@ def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
 
 
 def start_jigsaw_game(stdscr):
+    """
+    Start the jigsaw game.
+
+    This function initializes the jigsaw mini-game, sets up the grid, and handles user input for moving and swapping
+    pieces.
+
+    :param stdscr: a curses window object
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: run the jigsaw game
+    """
     rows, cols = 3, 3
     curses.curs_set(0)
     stdscr.nodelay(False)
