@@ -140,7 +140,7 @@ def check_for_boss(board, character):
     :precondition: the character must have valid "X-coordinate" and "Y-coordinate" keys with integer values
     :postcondition: determine if the character's current position matches a boss's position
     :postcondition: replace the boss, if present, with a space
-    :return: a boolean, True If an boss is present, False otherwise
+    :return: a boolean, True If a boss is present, False otherwise
     """
     x_pos = character["X-coordinate"]
     y_pos = character["Y-coordinate"]
