@@ -9,6 +9,19 @@ from scenes import play_game_scene, play_battle_end
 
 
 def play_riddle(stdscr, character):
+    """
+    Drive the riddle mini-game
+
+    This function displays a randomly chosen riddle, takes user input, and checks whether the answer is correct.
+    If correct, a passage is revealed; if incorrect, the character loses 1 HP.
+
+    :param stdscr: the main curses screen window object
+    :param character: a dictionary containing the character's current position and stats
+    :precondition: stdscr must be a valid curses window object
+    :precondition: character dictionary must contain 'Current HP' key
+    :postcondition: update the screen to show the riddle and its result
+    :postcondition: decrease the character's HP by 1 if the answer is incorrect
+    """
     riddles = [
         {
             "description": """You enter a dimly lit room. A mysterious inscription catches your eye.
@@ -71,7 +84,16 @@ def play_riddle(stdscr, character):
         character["Current HP"] -= 1
     curses.noecho()
 
+
 def get_bar_color(time_percentage):
+    """
+    Determine the color of the progress bar based on the remaining time percentage.
+
+    :param time_percentage: float value representing the remaining time as a fraction (0 to 1)
+    :precondition: time_percentage should be a float between 0 and 1
+    :postcondition: determine a curses color pair corresponding to the time range
+    :return: a curses color pair indicating the bar color
+    """
     if time_percentage > 0.6:
         return curses.color_pair(2)
     elif time_percentage > 0.3:
@@ -79,7 +101,19 @@ def get_bar_color(time_percentage):
     else:
         return curses.color_pair(4)
 
+
 def struggle_game(stdscr, message, character, boss=False):
+    """
+    Simulate a struggle event where the player must press 'B' rapidly to succeed.
+
+    This function initiates a mini-game where the player has a limited time to reach a target number of a key presses.
+    If successful, the game is won; if not, they lose HP (or all HP if against a boss).
+
+    :param stdscr: the main curses screen window object
+    :param message: a string representing the initial message to be displayed on screen
+    :param character: a dictionary containing the character's current position and stats
+    :param boss: a boolean indicating if this is a boss fight, default is False
+    """
     fire_obj = simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav")
     keypress_obj = simpleaudio.WaveObject.from_wave_file("sounds/keypress.wav")
     success_obj = simpleaudio.WaveObject.from_wave_file("sounds/success.wav")
