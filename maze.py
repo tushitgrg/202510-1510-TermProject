@@ -60,7 +60,7 @@ def make_board(rows, columns, character, boss=False):
     :param columns: an integer representing the total number of columns in the maze
     :param character: a dictionary representing the character with keys "X-coordinate" and "Y-coordinate"
     :param boss: a boolean indicating if this is a boss-level maze
-    :precondition: rows and columns must be positive integers
+    :precondition: rows and columns must be greater than 1
     :precondition: the character must have valid "X-coordinate" and "Y-coordinate" keys with integer values
     :postcondition: generate a game board dictionary that contains paths, obstacles in random places
     :return: a tuple (maze dictionary, goal_position) if not boss, otherwise (maze dictionary, None)
