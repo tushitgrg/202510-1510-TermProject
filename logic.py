@@ -14,6 +14,16 @@ def check_for_foe(board, character):
     :postcondition: determine if the character's current position matches an enemy's position
     :postcondition: replace the enemy, if present, with a space
     :return: a boolean, True If an enemy is present, False otherwise
+
+    >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "enemy", (1, 1): "space"}
+    >>> character_test = {"X-coordinate": 0, "Y-coordinate": 1}
+    >>> check_for_foe(board_test, character_test)
+    True
+
+    >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "enemy", (1, 1): "space"}
+    >>> character_test = {"X-coordinate": 1, "Y-coordinate": 1}
+    >>> check_for_foe(board_test, character_test)
+    False
     """
     x_pos = character["X-coordinate"]
     y_pos = character["Y-coordinate"]
@@ -141,6 +151,16 @@ def check_for_boss(board, character):
     :postcondition: determine if the character's current position matches a boss's position
     :postcondition: replace the boss, if present, with a space
     :return: a boolean, True If a boss is present, False otherwise
+
+    >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "Boss", (1, 1): "space"}
+    >>> character_test = {"X-coordinate": 0, "Y-coordinate": 1}
+    >>> check_for_boss(board_test, character_test)
+    True
+
+    >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "Boss", (1, 1): "space"}
+    >>> character_test = {"X-coordinate": 1, "Y-coordinate": 1}
+    >>> check_for_boss(board_test, character_test)
+    False
     """
     x_pos = character["X-coordinate"]
     y_pos = character["Y-coordinate"]
