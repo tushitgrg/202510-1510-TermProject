@@ -151,6 +151,21 @@ def print_game_stats(stdscr, character, ascii_chars):
 
 
 def describe_current_location(stdscr, board, character):
+    """
+    Render the current dungeon map and update character status.
+
+    This function clears and refreshes the main screen window with the current state of the dungeon map, including the
+    character's position, obstacles, and items.
+
+    :param stdscr: the main curses screen window object
+    :param board: a dictionary representing game board, where keys are (y, x) coordinates and values are entity types
+    :param character: a dictionary containing the character's current position and stats
+    :precondition: stdscr must be a valid curses window object
+    :precondition: board must be a dictionary with valid maze data
+    :precondition: character must include 'Y-coordinate' and 'X-coordinate' keys
+    :postcondition: update the screen with the ascii map of current maze state
+    :postcondition: refresh the stats window with the latest character's stats
+    """
     stdscr.clear()
 
     if not hasattr(describe_current_location, "colors_initialized"):
