@@ -4,6 +4,14 @@ import simpleaudio
 
 
 def add_random_block():
+    """
+    Generate a random block type for the maze.
+
+    This function randomly selects one of three block types: 'enemy', 'heal', or 'space'. The probability of selecting
+    enemy and heal is 1/20.
+
+    :return: a string representing the type of block ('enemy', 'heal', or 'space')
+    """
     random_number = random.randint(1, 20)
     if random_number == 20:
         return "enemy"
@@ -13,6 +21,22 @@ def add_random_block():
 
 
 def generate_maze(start_x, start_y, board, rows, cols, goal_position, boss):
+    """
+    Carve out paths in the board in the form of a maze.
+
+    This function carves out paths in the board and places random blocks. If the boss parameter is True, it avoids
+    placing random blocks.
+
+    :param start_x: an integer representing the starting x-coordinate of the maze generation
+    :param start_y: an integer representing the starting y-coordinate of the maze generation
+    :param board: a dictionary representing game board, where keys are (y, x) coordinates and values are entity types
+    :param rows: an integer representing the total number of rows in the maze
+    :param cols: an integer representing the total number of columns in the maze
+    :param goal_position: a list storing the goal's coordinates
+    :param boss: a boolean indicating if the boss level is being generated
+    :precondition: board dictionary must be initialized with 'wall' values
+    :postcondition: modify board dictionary to a game maze that contains paths and obstacles in random places
+    """
     directions = [(0, 2), (2, 0), (0, -2), (-2, 0)]
     random.shuffle(directions)
     for dx, dy in directions:
@@ -27,6 +51,20 @@ def generate_maze(start_x, start_y, board, rows, cols, goal_position, boss):
 
 
 def make_board(rows, columns, character, boss=False):
+    """
+    Create a maze board and generate its structure.
+
+    This function initializes the game board dictionary with walls and carves out a maze structure.
+
+    :param rows: an integer representing the total number of rows in the maze
+    :param columns: an integer representing the total number of columns in the maze
+    :param character: a dictionary representing the character with keys "X-coordinate" and "Y-coordinate"
+    :param boss: a boolean indicating if this is a boss-level maze
+    :precondition: rows and columns must be positive integers
+    :precondition: the character must have valid "X-coordinate" and "Y-coordinate" keys with integer values
+    :postcondition: generate a game board dictionary that contains paths, obstacles in random places
+    :return: a tuple (maze dictionary, goal_position) if not boss, otherwise (maze dictionary, None)
+    """
     board = {(row, column): "wall" for row in range(0, rows + 1) for column in range(0, columns + 1)}
     board[(0, 0)] = "space"
     goal_position = [0, 0]
@@ -40,6 +78,19 @@ def make_board(rows, columns, character, boss=False):
 
 
 def print_game_stats(stdscr, character, ascii_chars):
+    """
+    Display the game statistics and title art on the screen.
+
+    This function renders the character's stats and game title art in a curses sub-window. This includes the player's
+    name, level, rank, experience, and health status, along with controls and key mappings.
+
+    :param stdscr: the main curses screen window object
+    :param character: a dictionary containing character information such as 'Name', 'Level', 'Experience', 'Current HP'
+    :param ascii_chars: a dictionary mapping game elements to their ASCII representation and curses attributes
+    :precondition: stdscr must be a valid curses window object
+    :precondition: character and ascii_chars must be properly formatted dictionaries
+    :postcondition: create the stats window with the current game and character statistics
+    """
     max_y, max_x = stdscr.getmaxyx()
     rank_names = {
         1: "Novice Inquisitor",
@@ -95,7 +146,8 @@ def print_game_stats(stdscr, character, ascii_chars):
 
     for index, (key, value) in enumerate(ascii_chars.items()):
         if key != "space":
-            stats_win.addstr(start_point + 11 + index, 1, f"{value['char']} - {key if key!='Goal' else 'Portal'}", value['attr'])
+            stats_win.addstr(start_point + 11 + index, 1, f"{value['char']} - {key if key != 'Goal' else 'Portal'}",
+                             value['attr'])
 
 
 def describe_current_location(stdscr, board, character):
