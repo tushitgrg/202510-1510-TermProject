@@ -1,10 +1,21 @@
 import curses
-
 import pyfiglet
 import random
 
 
 def play_game_scene(stdscr, message):
+    """
+    Display a game message on the screen and wait for the user to press enter.
+
+    This function first clears the current screen and then displays a centered message on the screen. It waits for the
+    user to press enter and then exits.
+
+    :param stdscr: the main curses screen window object
+    :param message: a string, representing the message to display on screen
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: display the message on the screen
+    :postcondition: exit when user presses enter
+    """
     curses.noecho()
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
@@ -24,6 +35,13 @@ def play_game_scene(stdscr, message):
 
 
 def initialise_colors_for_fire():
+    """
+    Initialize color pairs for the fire animation.
+
+    This function sets up different color pairs, required to simulate fire effects in the curses window.
+
+    :precondition: curses object must be initialized
+    """
     curses.start_color()
     curses.init_pair(1, 0, 0)
     curses.init_pair(2, 1, 0)
@@ -32,6 +50,15 @@ def initialise_colors_for_fire():
 
 
 def play_animation_fire(stdscr, if_won):
+    """
+    Display a fire animation with a win or lose message.
+
+    :param stdscr: the main curses screen window object
+    :param if_won: a boolean value indicating whether the player has won
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: play a fire animation with the win or lose message
+    :postcondition: exit when user presses enter
+    """
     won_message = pyfiglet.figlet_format("You Survived!")
     lost_message = pyfiglet.figlet_format("You Lost!")
     message = won_message if if_won else lost_message
@@ -71,11 +98,21 @@ def play_animation_fire(stdscr, if_won):
     stdscr.nodelay(False)
 
 
-def play_battle_end(stdscr, character, user_decison):
+def play_battle_end(stdscr, character, user_decision):
+    """
+    Display the battle outcome message based on the player's decision.
+
+    :param stdscr: the main curses screen window object
+    :param character: a dictionary containing the character's current position and stats
+    :param user_decision: string representing the player's choice ('flee' or 'burn')
+    :precondition: stdscr must be a valid curses window object
+    :precondition: character dictionary must include 'Experience' and 'Level' keys
+    :postcondition: the character's experience is updated based on the battle outcome
+    """
     she_was_good = random.choice([True, False])
     if she_was_good:
         innocent_art = pyfiglet.figlet_format('She was Innocent!')
-        if user_decison == "flee":
+        if user_decision == "flee":
             message = f"""
              {innocent_art}
              She vanishes into mist. A strange warmth fills your soul. 
@@ -94,7 +131,7 @@ def play_battle_end(stdscr, character, user_decison):
             character["Experience"] = max(0, character["Experience"] - character["Level"] * 30)
     else:
         not_innocent_art = pyfiglet.figlet_format('She was NOT Innocent!')
-        if user_decison == "flee":
+        if user_decision == "flee":
             message = f"""
                 {not_innocent_art}
                  A distant cackle. The village burns. You feel weaker.
@@ -115,9 +152,17 @@ def play_battle_end(stdscr, character, user_decison):
 
 
 def get_game_dialogue(name, user_name):
+    """
+    Retrieve pre-written game dialogues based on the scene name.
+
+    :param name: a string representing the name of the dialogue scene
+    :param user_name: a string representing the player's name for personalized messages
+    :postcondition: personalize the dialogues with the user_name
+    :return: a formatted string containing the dialogue, or None if the name is invalid
+    """
     game_dialogues = {
         "intro": f"""
-    Night falls over the cursed realm of Ashenvale,
+    Night falls over the cursed realm of Ashen vale,
     where dark magic festers and shadows twist in the cold wind.
     You, {user_name}—the relentless witch hunter—have been summoned
     by the Grand Council of Purity. Your sacred duty: eradicate the witches
