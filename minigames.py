@@ -1,5 +1,10 @@
-import time
+"""
+Tushit Garg
+A01418176
 
+This module drives interactive mini-games, featuring a riddle challenge and a timed key-press struggle event.
+"""
+import time
 import curses
 
 import random
