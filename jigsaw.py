@@ -1,3 +1,10 @@
+"""
+Tushit Garg
+A01418176
+
+This module implements a 3x3 jigsaw puzzle game using curses, allowing players to move and swap ASCII art pieces.
+It includes functions to initialize the grid, check puzzle completion, and render the game interface.
+"""
 import curses
 import random
 import itertools
