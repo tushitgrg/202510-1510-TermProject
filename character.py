@@ -1,3 +1,10 @@
+"""
+Tushit Garg
+A01418176
+
+This module creates and manages game characters, tracking their health, position, and experience. It includes functions
+to check vitality, move characters, initialize stats, and handle leveling up.
+"""
 from scenes import play_game_scene
 
 
