@@ -3,7 +3,7 @@ Tushit Garg
 A01418176
 
 This module manages game board interactions, including enemy and boss encounters, character movement validation, and
-goal checking. It enables random enemy movement and updates the board state accordingly.
+goal checking.
 """
 import random
 
