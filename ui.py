@@ -1,3 +1,10 @@
+"""
+Tushit Garg
+A01418176
+
+This module manages user interactions, handling battle decisions, name input with animated welcome, screen size
+validation, and movement choices.
+"""
 import time
 
 import curses
