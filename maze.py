@@ -1,3 +1,10 @@
+"""
+Tushit Garg
+A01418176
+
+This module generates and manages a maze-based game board with random blocks like enemies and heals, using curses for
+display. It handles maze creation, character stats rendering, and real-time map updates with sound effects.
+"""
 import random
 import curses
 import simpleaudio
