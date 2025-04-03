@@ -5,6 +5,17 @@ import pyfiglet
 
 
 def get_user_battle_decision(stdscr):
+    """
+    Prompt the user to make a battle decision in the game.
+
+    This function displays a message about the consequences of burning or fleeing from a witch. It accepts user input
+    until a valid decision ('burn' or 'flee') is entered.
+
+    :param stdscr: the main curses screen window object
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: prompt the user for their decision
+    :postcondition: exit only when a valid input is given
+    """
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
     message = """
@@ -54,7 +65,7 @@ def welcome_user_and_ask_for_name(stdscr):
             stdscr.addstr(start_y + counter_x, start_x, line[:counter_j], curses.color_pair(3))
 
             stdscr.refresh()
-            # time.sleep(0.007)
+            time.sleep(0.007)
 
     stdscr.refresh()
     return get_user_name(stdscr)
