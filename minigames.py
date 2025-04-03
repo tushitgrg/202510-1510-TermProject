@@ -78,7 +78,8 @@ def play_riddle(stdscr, character):
         input_answer = stdscr.getstr(start_y + len(lines) + 1, 20).decode("utf-8").lower()
     if input_answer in riddle["answer"]:
         play_game_scene(stdscr,
-                        "You answered correctly. \n The wall slides open, revealing a mysterious passage! \n Press Enter/Return to continue")
+                        "You answered correctly. \n The wall slides open, revealing a mysterious passage! \n Press "
+                        "Enter/Return to continue")
     else:
         play_game_scene(stdscr, "You answered Wrong. \n You loose 1 HP \n Press Enter/Return to continue")
         character["Current HP"] -= 1
