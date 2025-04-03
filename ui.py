@@ -15,6 +15,7 @@ def get_user_battle_decision(stdscr):
     :precondition: stdscr must be a valid curses window object
     :postcondition: prompt the user for their decision
     :postcondition: exit only when a valid input is given
+    :return: a string, representing the user decision ('burn' or 'flee')
     """
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
@@ -45,6 +46,16 @@ def get_user_battle_decision(stdscr):
 
 
 def welcome_user_and_ask_for_name(stdscr):
+    """
+    Prompt the user for their name.
+
+    This function displays a welcome message with an animated text effect and prompts the user for their name.
+
+    :param stdscr: the main curses screen window object
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: prompt the user for their decision
+    :return: a string, representing the name
+    """
     welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     stdscr.clear()
@@ -72,6 +83,13 @@ def welcome_user_and_ask_for_name(stdscr):
 
 
 def is_screen_size_ok(stdscr):
+    """
+    Check if the terminal screen size meets the required dimensions.
+
+    :param stdscr: the main curses screen window object
+    :precondition: stdscr must be a valid curses window object
+    :return: a boolean, True if the screen size is sufficient, False otherwise
+    """
     max_y, max_x = stdscr.getmaxyx()
     if max_y < 46 or max_x < 135:
         return False
@@ -79,6 +97,16 @@ def is_screen_size_ok(stdscr):
 
 
 def get_user_choice(stdscr, prompt_y):
+    """
+    Get the user's movement choice from the keyboard.
+
+    This function listens for valid keys: 'w', 'a', 's', 'd' for movement, 'q' to quit. If an invalid key is pressed,
+    an error message is displayed.
+
+    :param stdscr: the main curses screen window object
+    :param prompt_y: the Y-coordinate to display invalid input messages
+    :return: the movement direction as a string ('w', 'a', 's', 'd') or None if 'q' is pressed
+    """
     input_direction = ""
     while not input_direction:
         stdscr.refresh()
