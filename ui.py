@@ -53,7 +53,7 @@ def welcome_user_and_ask_for_name(stdscr):
 
     :param stdscr: the main curses screen window object
     :precondition: stdscr must be a valid curses window object
-    :postcondition: prompt the user for their decision
+    :postcondition: print the welcome message
     :return: a string, representing the name
     """
     welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
@@ -105,6 +105,9 @@ def get_user_choice(stdscr, prompt_y):
 
     :param stdscr: the main curses screen window object
     :param prompt_y: the Y-coordinate to display invalid input messages
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: listen for valid keystrokes
+    :postcondition: display an error message if an invalid key is pressed
     :return: the movement direction as a string ('w', 'a', 's', 'd') or None if 'q' is pressed
     """
     input_direction = ""
@@ -122,6 +125,14 @@ def get_user_choice(stdscr, prompt_y):
 
 
 def get_user_name(stdscr):
+    """
+    Prompt the user to enter their name.
+
+    :param stdscr: the main curses screen window object
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: ask the user for their name
+    :return: a string, representing the name
+    """
     max_y, max_x = stdscr.getmaxyx()
     stdscr.addstr(max_y - 3, 0, "Enter your name and continue using the return key!")
 
