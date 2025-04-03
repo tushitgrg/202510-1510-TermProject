@@ -1,3 +1,10 @@
+"""
+Tushit Garg
+A01418176
+
+This module handles game scene displays and animations using curses, including message prompts, fire effects,
+and battle outcomes.
+"""
 import curses
 import pyfiglet
 import random
