@@ -187,8 +187,8 @@ def describe_current_location(stdscr, board, character):
     ascii_chars = {
         "space": {"char": " ", "attr": curses.color_pair(1) | curses.A_BOLD},
         "character": {"char": "@", "attr": curses.color_pair(4) | curses.A_BOLD},
-        "Goal": {"char": "༒", "attr": curses.color_pair(2) | curses.A_BOLD},
-        "wall": {"char": "█", "attr": curses.color_pair(3) | curses.A_BOLD},
+        "Goal": {"char": "🏰", "attr": curses.color_pair(3) | curses.A_BOLD},
+        "wall": {"char": "█", "attr": curses.color_pair(2) | curses.A_BOLD},
         "enemy": {"char": "Ψ", "attr": curses.color_pair(1) | curses.A_BOLD},
         "heal": {"char": "ɸ", "attr": curses.color_pair(5) | curses.A_BOLD},
         "Boss": {"char": "Ж", "attr": curses.color_pair(1) | curses.A_BOLD}
