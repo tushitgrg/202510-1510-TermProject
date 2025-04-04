@@ -282,6 +282,17 @@ def setup_screen(stdscr):
     if curses.has_colors():
         init_colors()
 
+def move_cursor(key, cursor):
+    cursor_y, cursor_x = cursor
+    if key in (ord('w'), ord('W')) and cursor_y > 0:
+        cursor_y -= 1
+    elif key in (ord('s'), ord('S')) and cursor_y < 2:
+        cursor_y += 1
+    elif key in (ord('a'), ord('A')) and cursor_x > 0:
+        cursor_x -= 1
+    elif key in (ord('d'), ord('D')) and cursor_x < 2:
+        cursor_x += 1
+    return cursor_y, cursor_x
 
 def start_jigsaw_game(stdscr):
     """
@@ -311,22 +322,12 @@ def start_jigsaw_game(stdscr):
 
     while True:
         draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
-
         if is_solved(grid, rows, cols):
             break
-
         key = stdscr.getch()
+        cursor = move_cursor(key, cursor)
         cursor_y, cursor_x = cursor
-
-        if key in (ord('w'), ord('W')) and cursor_y > 0:
-            cursor_y -= 1
-        elif key in (ord('s'), ord('S')) and cursor_y < 2:
-            cursor_y += 1
-        elif key in (ord('a'), ord('A')) and cursor_x > 0:
-            cursor_x -= 1
-        elif key in (ord('d'), ord('D')) and cursor_x < 2:
-            cursor_x += 1
-        elif key in (curses.KEY_ENTER, 10, 13):
+        if key in (curses.KEY_ENTER, 10, 13):
             if not selected:
                 selected = (cursor_y, cursor_x)
             else:
@@ -337,5 +338,4 @@ def start_jigsaw_game(stdscr):
                     grid[selected_y][selected_x], grid[cursor_y][cursor_x] = grid[cursor_y][cursor_x], grid[selected_y][
                         selected_x]
                     selected = None
-
         cursor = (cursor_y, cursor_x)
