@@ -170,6 +170,29 @@ def is_piece_in_correct_position(grid, row, col):
     return pos == row * 3 + col
 
 
+def get_cell_attribute(row, col, cursor, selected, colors, grid):
+    if (row, col) == cursor and (row, col) == selected:
+        return curses.color_pair(colors["selected"]) | curses.A_BOLD
+    elif (row, col) == cursor:
+        return curses.color_pair(colors["cursor"])
+    elif (row, col) == selected:
+        return curses.color_pair(colors["selected"])
+    elif is_piece_in_correct_position(grid, row, col):
+        return curses.color_pair(colors["correct"])
+    else:
+        return curses.color_pair(colors["normal"])
+
+def draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_height):
+    stdscr.addstr(cell_y, cell_x, "+-----+", attr)
+
+    art_piece = ascii_picture[piece_idx]
+    for i, line in enumerate(art_piece):
+        if i < piece_height:
+            stdscr.addstr(cell_y + i + 1, cell_x, f"|{line}|", attr)
+
+    stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
+
+
 def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols):
     """
     Draw the puzzle grid on the screen using curses.
@@ -205,25 +228,8 @@ def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
         piece_idx, pos = grid[row][col]
         cell_y = start_y + row * (piece_height + 1)
         cell_x = start_x + col * (piece_width + 3)
-        if (row, col) == cursor and (row, col) == selected:
-            attr = curses.color_pair(colors["selected"]) | curses.A_BOLD
-        elif (row, col) == cursor:
-            attr = curses.color_pair(colors["cursor"])
-        elif (row, col) == selected:
-            attr = curses.color_pair(colors["selected"])
-        elif is_piece_in_correct_position(grid, row, col):
-            attr = curses.color_pair(colors["correct"])
-        else:
-            attr = curses.color_pair(colors["normal"])
-
-        stdscr.addstr(cell_y, cell_x, "+-----+", attr)
-
-        art_piece = ascii_picture[piece_idx]
-        for i, line in enumerate(art_piece):
-            if i < piece_height:
-                stdscr.addstr(cell_y + i + 1, cell_x, f"|{line}|", attr)
-
-        stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
+        attr = get_cell_attribute(row, col, cursor, selected, colors, grid)
+        draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_height)
 
     help_text = "WASD=Move | ENTER=Select/Swap"
     stdscr.addstr(start_y + grid_height + 2, start_x + (grid_width - len(help_text)) // 2, help_text)
