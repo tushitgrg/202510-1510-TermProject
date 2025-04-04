@@ -171,6 +171,20 @@ def is_piece_in_correct_position(grid, row, col):
 
 
 def get_cell_attribute(row, col, cursor, selected, colors, grid):
+    """
+    Determine the color attribute for a specific cell in the puzzle grid.
+
+    :param row: the row index of the cell
+    :param col: the column index of the cell
+    :param cursor: a tuple representing the current cursor position
+    :param selected: a tuple representing the currently selected piece or None if no selection
+    :param colors: a dictionary mapping color names to curses color pair numbers
+    :param grid: a list representing the current state of the puzzle grid
+    :precondition: grid must be a list of lists, each containing tuples of two integers representing the puzzle
+    :precondition: curses must be initialized
+    :postcondition: find the correct color attribute for a specific cell
+    :return: a curses color pair indicating the cell color
+    """
     if (row, col) == cursor and (row, col) == selected:
         return curses.color_pair(colors["selected"]) | curses.A_BOLD
     elif (row, col) == cursor:
@@ -181,6 +195,7 @@ def get_cell_attribute(row, col, cursor, selected, colors, grid):
         return curses.color_pair(colors["correct"])
     else:
         return curses.color_pair(colors["normal"])
+
 
 def draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_height):
     stdscr.addstr(cell_y, cell_x, "+-----+", attr)
