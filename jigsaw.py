@@ -319,7 +319,7 @@ def start_jigsaw_game(stdscr):
     :param stdscr: a curses window object
     :precondition: stdscr must be a valid curses window object
     :postcondition: run the jigsaw game
-    :postcondtion: exit only when the jigsaw is solved
+    :postcondition: exit only when the jigsaw is solved
     """
     rows, cols = 3, 3
     setup_screen(stdscr)
