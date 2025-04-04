@@ -198,8 +198,21 @@ def get_cell_attribute(row, col, cursor, selected, colors, grid):
 
 
 def draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_height):
-    stdscr.addstr(cell_y, cell_x, "+-----+", attr)
+    """
+    Draw an ASCII puzzle piece at a given position on the screen.
 
+    :param stdscr: a curses window object
+    :param cell_y: the y-coordinate of the top-left corner of the piece
+    :param cell_x: the x-coordinate of the top-left corner of the piece
+    :param attr: the curses color attribute for the piece's display
+    :param ascii_picture: a list containing ASCII art representations of puzzle pieces
+    :param piece_idx: the index of the ASCII piece to draw
+    :param piece_height: the height of the puzzle piece
+    :precondition: stdscr must be a valid curses window object
+    :precondition: piece_idx must be a valid index in ascii_picture
+    :postcondition: draw the specified puzzle piece on the screen at the given coordinates
+    """
+    stdscr.addstr(cell_y, cell_x, "+-----+", attr)
     art_piece = ascii_picture[piece_idx]
     for i, line in enumerate(art_piece):
         if i < piece_height:
