@@ -156,6 +156,21 @@ def print_game_stats(stdscr, character, ascii_chars):
             stats_win.addstr(start_point + 11 + index, 1, f"{value['char']} - {key if key != 'Goal' else 'Portal'}",
                              value['attr'])
 
+def initialise_colors_for_map():
+    """
+    Initialize color pairs for the main game.
+
+    This function sets up color pairs for different elements in the main game.
+
+    :precondition: curses must be initialized
+    :postcondition: initialize colors for different elements of the game
+    """
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 def describe_current_location(stdscr, board, character):
     """
@@ -174,15 +189,7 @@ def describe_current_location(stdscr, board, character):
     :postcondition: refresh the stats window with the latest character's stats
     """
     stdscr.clear()
-
-    if not hasattr(describe_current_location, "colors_initialized"):
-        curses.start_color()
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-        curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
-        curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
-        curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
-        describe_current_location.colors_initialized = True
+    initialise_colors_for_map()
 
     ascii_chars = {
         "space": {"char": " ", "attr": curses.color_pair(1) | curses.A_BOLD},
