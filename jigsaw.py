@@ -282,7 +282,21 @@ def setup_screen(stdscr):
     if curses.has_colors():
         init_colors()
 
+
 def move_cursor(key, cursor):
+    """
+    Update the cursor position based on the user input key.
+
+    This function interprets movement keys ('w', 'a', 's', 'd') to adjust the cursor position, ensuring it stays within
+    bounds.
+
+    :param key: the key code received from stdscr.getch()
+    :param cursor: a tuple (y, x) representing the current cursor position
+    :precondition: key is a valid key code for movement
+    :precondition: cursor is a tuple of two integers
+    :postcondition: calculate the new cursor position after applying the key input
+    :return: a tuple (new_y, new_x) representing the updated cursor position
+    """
     cursor_y, cursor_x = cursor
     if key in (ord('w'), ord('W')) and cursor_y > 0:
         cursor_y -= 1
@@ -294,6 +308,7 @@ def move_cursor(key, cursor):
         cursor_x += 1
     return cursor_y, cursor_x
 
+
 def start_jigsaw_game(stdscr):
     """
     Start the jigsaw game.
@@ -304,6 +319,7 @@ def start_jigsaw_game(stdscr):
     :param stdscr: a curses window object
     :precondition: stdscr must be a valid curses window object
     :postcondition: run the jigsaw game
+    :postcondtion: exit only when the jigsaw is solved
     """
     rows, cols = 3, 3
     setup_screen(stdscr)
