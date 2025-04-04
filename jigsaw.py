@@ -265,6 +265,24 @@ def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
     stdscr.refresh()
 
 
+def setup_screen(stdscr):
+    """
+    Configure the curses screen for the jigsaw game.
+
+    This function sets up the screen by hiding the cursor, configuring input delays, enabling keypad support, and
+    initializing colors if available.
+
+    :param stdscr: a curses window object
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: prepare the screen for game rendering and input
+    """
+    curses.curs_set(0)
+    stdscr.nodelay(False)
+    stdscr.keypad(True)
+    if curses.has_colors():
+        init_colors()
+
+
 def start_jigsaw_game(stdscr):
     """
     Start the jigsaw game.
@@ -277,11 +295,7 @@ def start_jigsaw_game(stdscr):
     :postcondition: run the jigsaw game
     """
     rows, cols = 3, 3
-    curses.curs_set(0)
-    stdscr.nodelay(False)
-    stdscr.keypad(True)
-    if curses.has_colors():
-        init_colors()
+    setup_screen(stdscr)
     colors = {
         "normal": 1,
         "selected": 2,
