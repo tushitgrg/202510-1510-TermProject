@@ -84,6 +84,50 @@ def make_board(rows, columns, character, boss=False):
         return board, None
 
 
+def draw_character_info(stats_win, start_point, character):
+    """
+    Display the character's basic information such as name, level, rank, and experience.
+
+    :param stats_win: a curses window object for stats display
+    :param start_point: an integer representing the starting line number for character info
+    :param character: a dictionary containing keys 'Name', 'Level', and 'Experience'
+    :precondition: character and rank_names are correctly formatted dictionaries
+    :postcondition: render the character information in the stats window
+    """
+    rank_names = {
+        1: "Novice Inquisitor",
+        2: "Sanctified Purifier",
+        3: "Grand Arbiter of Fire",
+        4: "The Hand of Divine Wrath"
+    }
+    stats_win.addstr(start_point + 2, 1, f"Name: {character['Name']}", curses.color_pair(4))
+    stats_win.addstr(start_point + 3, 1, f"Level: {character['Level']}", curses.color_pair(3))
+    stats_win.addstr(start_point + 4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
+    stats_win.addstr(start_point + 5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
+                     curses.color_pair(1))
+
+
+def draw_health_bar(stats_win, start_point, character):
+    """
+    Display the character's health bar on the stats window.
+
+    :param stats_win: a curses window object for stats display
+    :param start_point: an integer representing the starting line number for the health bar
+    :param character: a dictionary containing 'Current HP' and 'Level' keys
+    :precondition: character has valid health data, and stats_win is properly initialized
+    :postcondition: render the health bar on the stats window
+    """
+    stats_win.addstr(start_point + 6, 1, "HP: [", curses.color_pair(4))
+    max_hp = character['Level'] * 5
+    for index in range(max_hp):
+        if index < character["Current HP"]:
+            stats_win.addch(start_point + 6, 6 + index, '♥', curses.color_pair(5))
+        else:
+            stats_win.addch(start_point + 6, 6 + index, '.', curses.color_pair(1))
+    stats_win.addstr(start_point + 6, 6 + max_hp,
+                     f"] ({character['Current HP']}/{max_hp})", curses.color_pair(4))
+
+
 def print_game_stats(stdscr, character, ascii_chars):
     """
     Display the game statistics and title art on the screen.
@@ -99,12 +143,7 @@ def print_game_stats(stdscr, character, ascii_chars):
     :postcondition: create the stats window with the current game and character statistics
     """
     max_y, max_x = stdscr.getmaxyx()
-    rank_names = {
-        1: "Novice Inquisitor",
-        2: "Sanctified Purifier",
-        3: "Grand Arbiter of Fire",
-        4: "The Hand of Divine Wrath"
-    }
+
     stats_win = stdscr.subwin(max_y - 3, int(max_x / 2) - 3, 0, 0)
 
     stats_win.box()
@@ -130,23 +169,8 @@ def print_game_stats(stdscr, character, ascii_chars):
     for index, line in enumerate(lines):
         stats_win.addstr(index, 10, line)
     start_point = 2 + len(lines)
-    stats_win.addstr(start_point + 2, 1, f"Name: {character['Name']}", curses.color_pair(4))
-    stats_win.addstr(start_point + 3, 1, f"Level: {character['Level']}", curses.color_pair(3))
-    stats_win.addstr(start_point + 4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
-    stats_win.addstr(start_point + 5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
-                     curses.color_pair(1))
-
-    stats_win.addstr(start_point + 6, 1, "HP: [", curses.color_pair(4))
-    for index in range(character['Level'] * 5):
-        if index < character["Current HP"]:
-            stats_win.addch(start_point + 6, 6 + index, '♥', curses.color_pair(5))
-        else:
-            stats_win.addch(start_point + 6, 6 + index, '.', curses.color_pair(1))
-
-    stats_win.addstr(start_point + 6, 6 + character['Level'] * 5,
-                     f"] ({character['Current HP']}/{character['Level'] * 5})",
-                     curses.color_pair(4))
-
+    draw_character_info(stats_win, start_point, character)
+    draw_health_bar(stats_win, start_point, character)
     stats_win.addstr(start_point + 8, 1, "Controls:", curses.color_pair(4))
     stats_win.addstr(start_point + 9, 1, "W/A/S/D: Move", curses.color_pair(4))
     stats_win.addstr(start_point + 10, 1, "Q: Quit", curses.color_pair(4))
@@ -155,6 +179,7 @@ def print_game_stats(stdscr, character, ascii_chars):
         if key != "space":
             stats_win.addstr(start_point + 11 + index, 1, f"{value['char']} - {key if key != 'Goal' else 'Portal'}",
                              value['attr'])
+
 
 def initialise_colors_for_map():
     """
@@ -171,6 +196,7 @@ def initialise_colors_for_map():
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
+
 
 def describe_current_location(stdscr, board, character):
     """
