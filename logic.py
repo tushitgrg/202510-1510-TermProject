@@ -6,12 +6,13 @@ This module manages game board interactions, including enemy and boss encounters
 goal checking.
 """
 import random
+from typing import Tuple, Dict
 
 from character import make_character
 from maze import make_board
 
 
-def check_for_foe(board, character):
+def check_for_foe(board: Dict[Tuple[int, int], str], character: Dict[str, int]) -> bool:
     """
     Check if the character is on an enemy's position.
 
@@ -23,7 +24,7 @@ def check_for_foe(board, character):
     :precondition: the character must have valid "X-coordinate" and "Y-coordinate" keys with integer values
     :postcondition: determine if the character's current position matches an enemy's position
     :postcondition: replace the enemy, if present, with a space
-    :return: a boolean, True If an enemy is present, False otherwise
+    :return: a boolean, True if an enemy is present, False otherwise
 
     >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "enemy", (1, 1): "space"}
     >>> character_test = {"X-coordinate": 0, "Y-coordinate": 1}
@@ -43,7 +44,7 @@ def check_for_foe(board, character):
     return False
 
 
-def validate_move(board, character, direction):
+def validate_move(board: Dict[Tuple[int, int], str], character: Dict[str, int], direction: str):
     """
     Validate a move in the game based on the input direction
 
@@ -92,7 +93,7 @@ def validate_move(board, character, direction):
     return False, None
 
 
-def check_if_goal_attained(goal_position, character):
+def check_if_goal_attained(goal_position: Tuple[int, int], character: Dict[str, int]) -> bool:
     """
     Check if the character has reached the goal.
 
@@ -117,7 +118,7 @@ def check_if_goal_attained(goal_position, character):
     return False
 
 
-def move_enemies(board, character):
+def move_enemies(board: Dict[Tuple[int, int], str], character: Dict[str, int]):
     """
     Move enemies randomly on the board.
 
@@ -148,7 +149,7 @@ def move_enemies(board, character):
                 break
 
 
-def check_for_boss(board, character):
+def check_for_boss(board: Dict[Tuple[int, int], str], character: Dict[str, int]) -> bool:
     """
     Check if the character is on a boss's position.
 
