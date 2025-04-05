@@ -35,7 +35,7 @@ def is_alive(character: dict) -> bool:
     return False
 
 
-def move_character(character: dict, new_pos: tuple[int, int]):
+def move_character(character: dict, new_pos: tuple[int, int]) -> None:
     """
     Move the character to a new position.
 
@@ -87,7 +87,7 @@ def make_character(name: str) -> dict:
     return character
 
 
-def check_and_level_up(character: dict, stdscr: curses.window):
+def check_and_level_up(character: dict, stdscr: curses.window) -> None:
     """
     Check and level up the character if they have enough experience.
 
