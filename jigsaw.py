@@ -12,7 +12,7 @@ from typing import List, Tuple, Dict, Optional
 from ui import is_screen_size_ok
 
 
-def init_colors():
+def init_colors() -> None:
     """
     Initialize color pairs for the jigsaw game.
 
@@ -202,7 +202,7 @@ def get_cell_attribute(row: int, col: int, cursor: Tuple[int, int], selected: Op
 
 
 def draw_piece(stdscr: curses.window, cell_y: int, cell_x: int, attr: int, ascii_picture: List[List[str]],
-               piece_idx: int, piece_height: int):
+               piece_idx: int, piece_height: int) -> None:
     """
     Draw an ASCII puzzle piece at a given position on the screen.
 
@@ -228,7 +228,7 @@ def draw_piece(stdscr: curses.window, cell_y: int, cell_x: int, attr: int, ascii
 
 def draw_grid(stdscr: curses.window, grid: List[List[Tuple[int, int]]], cursor: Tuple[int, int],
               selected: Optional[Tuple[int, int]], colors: Dict[str, int], ascii_picture: List[List[str]], rows: int,
-              cols: int):
+              cols: int) -> None:
     """
     Draw the puzzle grid on the screen using curses.
 
@@ -272,7 +272,7 @@ def draw_grid(stdscr: curses.window, grid: List[List[Tuple[int, int]]], cursor: 
     stdscr.refresh()
 
 
-def setup_screen(stdscr: curses.window):
+def setup_screen(stdscr: curses.window) -> None:
     """
     Configure the curses screen for the jigsaw game.
 
@@ -316,7 +316,7 @@ def move_cursor(key: int, cursor: Tuple[int, int]) -> Tuple[int, int]:
     return cursor_y, cursor_x
 
 
-def start_jigsaw_game(stdscr: curses.window):
+def start_jigsaw_game(stdscr: curses.window) -> None:
     """
     Start the jigsaw game.
 
