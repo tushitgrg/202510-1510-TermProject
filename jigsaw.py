@@ -7,6 +7,7 @@ This module implements a 3x3 jigsaw puzzle game, allowing players to move and sw
 import curses
 import random
 import itertools
+from typing import List, Tuple, Dict, Optional
 
 from ui import is_screen_size_ok
 
@@ -28,7 +29,7 @@ def init_colors():
     curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
 
-def get_ascii_picture():
+def get_ascii_picture() -> List[List[str]]:
     """
     Get a list of ASCII arts used for the puzzle pieces.
 
@@ -104,7 +105,7 @@ def get_ascii_picture():
     ]
 
 
-def init_puzzle(rows, cols):
+def init_puzzle(rows: int, cols: int) -> List[List[Tuple[int, int]]]:
     """
     Initialize the jigsaw puzzle by creating a shuffled grid of pieces.
 
@@ -120,7 +121,7 @@ def init_puzzle(rows, cols):
     return grid
 
 
-def is_solved(grid, rows, cols):
+def is_solved(grid: List[List[Tuple[int, int]]], rows: int, cols: int) -> bool:
     """
     Check if the puzzle is solved.
 
@@ -149,7 +150,7 @@ def is_solved(grid, rows, cols):
     return True
 
 
-def is_piece_in_correct_position(grid, row, col):
+def is_piece_in_correct_position(grid: List[List[Tuple[int, int]]], row: int, col: int) -> bool:
     """
     Check if a piece is in its correct position.
 
@@ -172,7 +173,8 @@ def is_piece_in_correct_position(grid, row, col):
     return pos == row * 3 + col
 
 
-def get_cell_attribute(row, col, cursor, selected, colors, grid):
+def get_cell_attribute(row: int, col: int, cursor: Tuple[int, int], selected: Optional[Tuple[int, int]],
+                       colors: Dict[str, int], grid: List[List[Tuple[int, int]]]) -> int:
     """
     Determine the color attribute for a specific cell in the puzzle grid.
 
@@ -199,7 +201,8 @@ def get_cell_attribute(row, col, cursor, selected, colors, grid):
         return curses.color_pair(colors["normal"])
 
 
-def draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_height):
+def draw_piece(stdscr: curses.window, cell_y: int, cell_x: int, attr: int, ascii_picture: List[List[str]],
+               piece_idx: int, piece_height: int):
     """
     Draw an ASCII puzzle piece at a given position on the screen.
 
@@ -223,7 +226,9 @@ def draw_piece(stdscr, cell_y, cell_x, attr, ascii_picture, piece_idx, piece_hei
     stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
 
 
-def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols):
+def draw_grid(stdscr: curses.window, grid: List[List[Tuple[int, int]]], cursor: Tuple[int, int],
+              selected: Optional[Tuple[int, int]], colors: Dict[str, int], ascii_picture: List[List[str]], rows: int,
+              cols: int):
     """
     Draw the puzzle grid on the screen using curses.
 
@@ -267,7 +272,7 @@ def draw_grid(stdscr, grid, cursor, selected, colors, ascii_picture, rows, cols)
     stdscr.refresh()
 
 
-def setup_screen(stdscr):
+def setup_screen(stdscr: curses.window):
     """
     Configure the curses screen for the jigsaw game.
 
@@ -285,7 +290,7 @@ def setup_screen(stdscr):
         init_colors()
 
 
-def move_cursor(key, cursor):
+def move_cursor(key: int, cursor: Tuple[int, int]) -> Tuple[int, int]:
     """
     Update the cursor position based on the user input key.
 
@@ -311,7 +316,7 @@ def move_cursor(key, cursor):
     return cursor_y, cursor_x
 
 
-def start_jigsaw_game(stdscr):
+def start_jigsaw_game(stdscr: curses.window):
     """
     Start the jigsaw game.
 
