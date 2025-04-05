@@ -109,6 +109,25 @@ def get_bar_color(time_percentage):
 
 
 def get_alert_message(presses, target_presses, elapsed_time, time_limit):
+    """
+    Generate an encouraging message based on player progress and remaining time.
+
+    :param presses: the number of times the player has pressed the key
+    :param target_presses: the required number of presses to win
+    :param elapsed_time: the time that has passed since the start of the mini-game
+    :param time_limit: the total time allowed for the struggle event
+    :postcondition: determine the correct message according to the progress
+    :return: a string message indicating the current state
+
+    >>> get_alert_message(24, 30, 2, 5)
+    'Almost there!'
+
+    >>> get_alert_message(10, 30, 4.5, 5)
+    'Time’s almost up!'
+
+    >>> get_alert_message(5, 30, 1, 5)
+    'Keep struggling!'
+    """
     if presses >= target_presses * 0.8:
         return "Almost there!"
     elif elapsed_time >= time_limit * 0.8:
@@ -118,6 +137,19 @@ def get_alert_message(presses, target_presses, elapsed_time, time_limit):
 
 
 def draw_progress_bar(time_limit, elapsed_time, presses, target_presses, stdscr, start_y, lines, max_x):
+    """
+    Draw the progress bar and status messages on the screen for the struggle event.
+
+    :param time_limit: total time allowed for the struggle event
+    :param elapsed_time: time that has passed since the start of the mini-game
+    :param presses: the number of successful key presses
+    :param target_presses: the number of required key presses to win
+    :param stdscr: the main curses screen window object
+    :param start_y: vertical starting position for drawing
+    :param lines: the lines of the message previously displayed
+    :param max_x: maximum horizontal screen size
+    :postcondition: update the curses screen with a visual progress bar, message, and remaining time
+    """
     time_percentage = (time_limit - elapsed_time) / time_limit
     bar_color = get_bar_color(time_percentage)
     progress = int((presses / target_presses) * 20)
@@ -136,6 +168,13 @@ def draw_progress_bar(time_limit, elapsed_time, presses, target_presses, stdscr,
 
 
 def load_sounds():
+    """
+    Load and return a dictionary of preloaded sound effects for different game events.
+
+    :precondition: all required sounds are present in the correct path
+    :postcondition: load all the required sound effects
+    :return: a dictionary containing WaveObject instances for fire, keypress, success, and failure sounds
+    """
     return {
         'fire': simpleaudio.WaveObject.from_wave_file("sounds/fire_effect.wav"),
         'keypress': simpleaudio.WaveObject.from_wave_file("sounds/keypress.wav"),
@@ -145,6 +184,17 @@ def load_sounds():
 
 
 def handle_failure(stdscr, play_obj, sounds, character, boss):
+    """
+    Handle the outcome of a failed struggle event.
+
+    :param stdscr: the main curses screen window object
+    :param play_obj: the currently playing sound object
+    :param sounds: a dictionary of preloaded sound effects
+    :param character: a dictionary containing the player's current state
+    :param boss: a boolean indicating if the opponent is a boss
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: set character to 0 HP if boss, or decrease 1 HP otherwise
+    """
     stdscr.nodelay(False)
     play_obj.stop()
     sounds["failure"].play()
@@ -154,6 +204,17 @@ def handle_failure(stdscr, play_obj, sounds, character, boss):
 
 
 def handle_success(stdscr, play_obj, sounds, character, boss):
+    """
+    Handle the outcome of a successful struggle event.
+
+    :param stdscr: the main curses screen window object
+    :param play_obj: the currently playing sound object
+    :param sounds: a dictionary of preloaded sound effects
+    :param character: a dictionary containing the player's current state
+    :param boss: a boolean indicating if the opponent is a boss
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: trigger next scene only if not a boss
+    """
     stdscr.nodelay(False)
     play_obj.stop()
     sounds["success"].play()
