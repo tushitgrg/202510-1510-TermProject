@@ -9,7 +9,7 @@ to check vitality, move characters, initialize stats, and handle leveling up.
 from scenes import play_game_scene
 
 
-def is_alive(character: dict):
+def is_alive(character: dict) -> bool:
     """
     Check if the character is still alive.
 
@@ -34,7 +34,7 @@ def is_alive(character: dict):
     return False
 
 
-def move_character(character: dict, new_pos: tuple):
+def move_character(character: dict, new_pos: tuple[int, int]):
     """
     Move the character to a new position.
 
@@ -63,7 +63,7 @@ def move_character(character: dict, new_pos: tuple):
     character["Y-coordinate"], character["X-coordinate"] = new_pos
 
 
-def make_character(name):
+def make_character(name: str) -> dict:
     """
     Create a new character with the given name.
 
@@ -86,7 +86,7 @@ def make_character(name):
     return character
 
 
-def check_and_level_up(character, stdscr):
+def check_and_level_up(character: dict, stdscr):
     """
     Check and level up the character if they have enough experience.
 
