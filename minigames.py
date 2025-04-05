@@ -223,6 +223,18 @@ def handle_success(stdscr, play_obj, sounds, character, boss):
 
 
 def display_centered_message(stdscr, message, max_y, max_x):
+    """
+    Display a multiline message centered on the screen.
+
+    :param stdscr: the main curses screen window object
+    :param message: string with newline-separated lines to be displayed
+    :param max_y: maximum vertical screen size
+    :param max_x: maximum horizontal screen size
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: print the message centered on the screen
+    :return: a tuple (start_y, lines) where start_y is the vertical position of the first line and lines is the
+    list of lines
+    """
     lines = message.strip().split('\n')
     start_y = max(0, (max_y - len(lines)) // 2)
     for index, line in enumerate(lines):
@@ -230,6 +242,7 @@ def display_centered_message(stdscr, message, max_y, max_x):
             start_x = max(0, (max_x - len(line)) // 2)
             stdscr.addstr(start_y + index, start_x, line[:max_x - 1], curses.color_pair(1))
     return start_y, lines
+
 
 def struggle_game(stdscr, message, character, boss=False):
     """
