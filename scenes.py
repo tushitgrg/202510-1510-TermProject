@@ -9,6 +9,8 @@ import curses
 import pyfiglet
 import random
 
+from ui import is_screen_size_ok
+
 
 def play_game_scene(stdscr, message):
     """
@@ -29,7 +31,6 @@ def play_game_scene(stdscr, message):
 
     lines = message.strip().split('\n')
     start_y = max(0, (max_y - len(lines)) // 2)
-
     for index, line in enumerate(lines):
         if start_y + index < max_y:
             start_x = max(0, (max_x - len(line)) // 2)
@@ -189,7 +190,7 @@ def get_game_dialogue(name, user_name):
     """,
         "boss_encountered": """
         The air turns heavy. The shadows twist unnaturally. You feel it before you see it—the 
-        Witchlord stands before you.
+        Witch lord stands before you.
         """,
         "game_over": f"""
     {pyfiglet.figlet_format("Game Over!")}  
@@ -200,3 +201,20 @@ def get_game_dialogue(name, user_name):
     if name in game_dialogues:
         return game_dialogues[name]
     return None
+
+
+def main(stdscr):
+    """
+    Drive the program.
+    """
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    play_game_scene(stdscr, "This is just another text game")
+    play_animation_fire(stdscr, True)
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
