@@ -11,7 +11,6 @@ import curses
 import pyfiglet
 
 
-
 def get_user_battle_decision(stdscr):
     """
     Prompt the user to make a battle decision in the game.
