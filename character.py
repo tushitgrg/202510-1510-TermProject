@@ -5,6 +5,7 @@ A01418176
 This module creates and manages game characters, tracking their health, position, and experience. It includes functions
 to check vitality, move characters, initialize stats, and handle leveling up.
 """
+import curses
 
 from scenes import play_game_scene
 
@@ -86,7 +87,7 @@ def make_character(name: str) -> dict:
     return character
 
 
-def check_and_level_up(character: dict, stdscr):
+def check_and_level_up(character: dict, stdscr: curses.window):
     """
     Check and level up the character if they have enough experience.
 
