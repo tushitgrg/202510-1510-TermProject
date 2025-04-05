@@ -5,6 +5,7 @@ A01418176
 This module creates and manages game characters, tracking their health, position, and experience. It includes functions
 to check vitality, move characters, initialize stats, and handle leveling up.
 """
+
 from scenes import play_game_scene
 
 
@@ -103,3 +104,20 @@ def check_and_level_up(character, stdscr):
         character['Experience'] -= character['Level'] * 200
         character['Level'] += 1
         character['Current HP'] = 5 * character['Level']
+
+
+def main():
+    """
+    Drive the program.
+    """
+    my_character = make_character("Tushit")
+    print(my_character)
+    move_character(my_character, (2, 3))
+    print("After moving the character!")
+    print(my_character)
+    print("Is my character alive?", end=" ")
+    print(is_alive(my_character))
+
+
+if __name__ == "__main__":
+    main()
