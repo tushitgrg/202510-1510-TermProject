@@ -7,6 +7,9 @@ goal checking.
 """
 import random
 
+from character import make_character
+from maze import make_board
+
 
 def check_for_foe(board, character):
     """
@@ -175,3 +178,19 @@ def check_for_boss(board, character):
         board[(y_pos, x_pos)] = "space"
         return True
     return False
+
+
+def main():
+    """
+    Drive the program.
+    """
+    my_character = make_character("Tushit")
+    my_board, goal_pos = make_board(4, 3, my_character)
+    print(f"Board initialised! {my_board}")
+    print(f"Did my Character reach the Goal? {check_if_goal_attained(goal_pos, my_character)}")
+    print(f"Can My Character move up? {validate_move(my_board, my_character, 'w')[0]}")
+    print(f"Can My Character move down? {validate_move(my_board, my_character, 's')[0]}")
+
+
+if __name__ == "__main__":
+    main()
