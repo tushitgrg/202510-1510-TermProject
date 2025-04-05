@@ -11,6 +11,7 @@ import curses
 import pyfiglet
 
 
+
 def get_user_battle_decision(stdscr):
     """
     Prompt the user to make a battle decision in the game.
@@ -148,3 +149,23 @@ def get_user_name(stdscr):
     while not input_name.strip():
         input_name = stdscr.getstr(max_y - 2, 0).decode("utf-8")
     return input_name
+
+
+def main(stdscr):
+    """
+    Drive the program.
+    """
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    input_name = welcome_user_and_ask_for_name(stdscr)
+    stdscr.clear()
+    stdscr.addstr(f"User chose {input_name} as the name")
+    stdscr.refresh()
+    stdscr.getch()
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
