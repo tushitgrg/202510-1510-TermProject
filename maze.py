@@ -9,6 +9,9 @@ import random
 import curses
 import simpleaudio
 
+from character import make_character
+from ui import is_screen_size_ok
+
 
 def add_random_block():
     """
@@ -249,3 +252,22 @@ def describe_current_location(stdscr, board, character):
             board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
 
     stdscr.refresh()
+
+
+def main(stdscr):
+    """
+    Drive the program.
+    """
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    my_character = make_character('Tushit')
+    my_board, goal_pos = make_board(36, 36, my_character)
+    describe_current_location(stdscr, my_board, my_character)
+    stdscr.getch()
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
