@@ -10,7 +10,10 @@ import curses
 import random
 import simpleaudio
 
+from character import make_character
+from maze import initialise_colors_for_map
 from scenes import play_game_scene, play_battle_end
+from ui import is_screen_size_ok
 
 
 def play_riddle(stdscr, character):
@@ -262,33 +265,43 @@ def struggle_game(stdscr, message, character, boss=False):
     stdscr.nodelay(True)
     stdscr.timeout(100)
     curses.noecho()
-
     target_presses = 50 if boss else 30
     presses = 0
     start_time = time.time()
     time_limit = 10 if boss else 5
     max_y, max_x = stdscr.getmaxyx()
     start_y, lines = display_centered_message(stdscr, message, max_y, max_x)
-
     while True:
         elapsed_time = time.time() - start_time
-
         if elapsed_time >= time_limit:
             handle_failure(stdscr, play_obj, sounds, character, boss)
             break
-
         key = stdscr.getch()
         if key == ord('b') or key == ord('B'):
             presses += 1
             sounds["keypress"].play()
-
         draw_progress_bar(time_limit, elapsed_time, presses, target_presses, stdscr, start_y, lines, max_x)
-
         if presses >= target_presses:
             handle_success(stdscr, play_obj, sounds, character, boss)
             break
-
         stdscr.refresh()
-
     play_obj.stop()
     stdscr.nodelay(False)
+
+
+def main(stdscr):
+    """
+    Drive the program.
+    """
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    my_character = make_character('Tushit')
+    initialise_colors_for_map()
+    struggle_game(stdscr, "Hi, This is a sample Message", my_character)
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
