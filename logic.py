@@ -44,7 +44,8 @@ def check_for_foe(board: Dict[Tuple[int, int], str], character: Dict[str, int]) 
     return False
 
 
-def validate_move(board: Dict[Tuple[int, int], str], character: Dict[str, int], direction: str):
+def validate_move(board: Dict[Tuple[int, int], str], character: Dict[str, int], direction: str) -> Tuple[
+    bool, Tuple[int, int] | None]:
     """
     Validate a move in the game based on the input direction
 
@@ -118,7 +119,7 @@ def check_if_goal_attained(goal_position: Tuple[int, int], character: Dict[str, 
     return False
 
 
-def move_enemies(board: Dict[Tuple[int, int], str], character: Dict[str, int]):
+def move_enemies(board: Dict[Tuple[int, int], str], character: Dict[str, int]) -> None:
     """
     Move enemies randomly on the board.
 
