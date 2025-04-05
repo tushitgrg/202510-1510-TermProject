@@ -89,11 +89,12 @@ def main(stdscr):
     """
     curses.curs_set(0)
     stdscr.clear()
-    # todo add a try block for curses.error
     try:
         game(stdscr)
     except KeyboardInterrupt:
         print("Game exited Successfully!")
+    except curses.error:
+        print("Window Size Changed! Please Restart!")
 
 
 if __name__ == "__main__":
