@@ -3,10 +3,11 @@ from unittest.mock import Mock, patch
 
 from character import check_and_level_up
 
+
 class Test(TestCase):
 
     @patch("character.play_game_scene", return_value=None)
-    def test_check_and_level_up_no_level_up(self,_):
+    def test_check_and_level_up_no_level_up(self, _):
         stdscr = Mock()
         character = {'Experience': 100, 'Level': 1, 'Current HP': 5}
         check_and_level_up(character, stdscr)
