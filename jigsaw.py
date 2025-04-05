@@ -8,6 +8,8 @@ import curses
 import random
 import itertools
 
+from ui import is_screen_size_ok
+
 
 def init_colors():
     """
@@ -355,3 +357,19 @@ def start_jigsaw_game(stdscr):
                         selected_x]
                     selected = None
         cursor = (cursor_y, cursor_x)
+
+
+def main(stdscr):
+    """
+    Drive the program.
+    """
+    if not is_screen_size_ok(stdscr):
+        stdscr.addstr(0, 0, "Please Increase your window size and try again")
+        stdscr.addstr(2, 0, "Press any key to exit")
+        stdscr.getkey()
+        return
+    start_jigsaw_game(stdscr)
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
