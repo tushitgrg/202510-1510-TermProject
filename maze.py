@@ -7,13 +7,15 @@ display. It handles maze creation, character stats rendering, and real-time map 
 """
 import random
 import curses
+from typing import Tuple, Dict, List, Union
+
 import simpleaudio
 
 from character import make_character
 from ui import is_screen_size_ok
 
 
-def add_random_block():
+def add_random_block() -> str:
     """
     Generate a random block type for the maze.
 
@@ -30,7 +32,8 @@ def add_random_block():
     return "space"
 
 
-def generate_maze(start_x, start_y, board, rows, cols, goal_position, boss):
+def generate_maze(start_x: int, start_y: int, board: Dict[Tuple[int, int], str], rows: int, cols: int,
+                  goal_position: List[int], boss: bool) -> None:
     """
     Carve out paths in the board in the form of a maze.
 
@@ -60,7 +63,7 @@ def generate_maze(start_x, start_y, board, rows, cols, goal_position, boss):
             generate_maze(result_x, result_y, board, rows, cols, goal_position, boss)
 
 
-def make_board(rows, columns, character, boss=False):
+def make_board(rows: int, columns: int, character: Dict[str, Union[int, str]], boss: bool = False):
     """
     Create a maze board and generate its structure.
 
@@ -87,7 +90,7 @@ def make_board(rows, columns, character, boss=False):
         return board, None
 
 
-def draw_character_info(stats_win, start_point, character):
+def draw_character_info(stats_win, start_point: int, character: Dict[str, Union[str, int]]) -> None:
     """
     Display the character's basic information such as name, level, rank, and experience.
 
@@ -110,7 +113,7 @@ def draw_character_info(stats_win, start_point, character):
                      curses.color_pair(1))
 
 
-def draw_health_bar(stats_win, start_point, character):
+def draw_health_bar(stats_win, start_point: int, character: Dict[str, int]) -> None:
     """
     Display the character's health bar on the stats window.
 
@@ -131,7 +134,8 @@ def draw_health_bar(stats_win, start_point, character):
                      f"] ({character['Current HP']}/{max_hp})", curses.color_pair(4))
 
 
-def print_game_stats(stdscr, character, ascii_chars):
+def print_game_stats(stdscr: curses.window, character: Dict[str, Union[str, int]],
+                     ascii_chars: Dict[str, Dict[str, Union[str, int]]]) -> None:
     """
     Display the game statistics and title art on the screen.
 
@@ -184,7 +188,7 @@ def print_game_stats(stdscr, character, ascii_chars):
                              value['attr'])
 
 
-def initialise_colors_for_map():
+def initialise_colors_for_map() -> None:
     """
     Initialize color pairs for the main game.
 
@@ -201,7 +205,8 @@ def initialise_colors_for_map():
     curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 
-def describe_current_location(stdscr, board, character):
+def describe_current_location(stdscr: curses.window, board: Dict[Tuple[int, int], str],
+                              character: Dict[str, Union[int, str]]) -> None:
     """
     Render the current dungeon map and update character status.
 
