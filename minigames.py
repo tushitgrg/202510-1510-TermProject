@@ -72,7 +72,7 @@ def play_riddle(stdscr: curses.window, character: Dict[str, int]) -> None:
     curses.noecho()
 
 
-def get_bar_color(time_percentage: float):
+def get_bar_color(time_percentage: float) -> int:
     """
     Determine the color of the progress bar based on the remaining time percentage.
 
