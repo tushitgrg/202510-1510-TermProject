@@ -55,6 +55,7 @@ def game(stdscr: curses.window) -> None:
                         play_riddle(stdscr, character)
                         board, goal_position = make_board(rows, columns, character)
                     else:
+                        play_game_scene(stdscr, get_game_dialogue('jigsaw_intro', character['Name']))
                         start_jigsaw_game(stdscr)
                         board, goal_position = make_board(rows, columns, character, boss=True)
                     describe_current_location(stdscr, board, character)

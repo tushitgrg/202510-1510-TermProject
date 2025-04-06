@@ -121,9 +121,9 @@ def play_battle_end(stdscr: curses.window, character: Dict[str, Union[str, int]]
     """
     xp_change = character["Level"] * 30
     if user_decision == "flee":
-        was_harmless = random.choices([True, False], weights=[70, 30])[0]
+        was_harmless = random.choices([True, False], weights=[65, 35])[0]
     else:
-        was_harmless = random.choices([True, False], weights=[30, 70])[0]
+        was_harmless = random.choices([True, False], weights=[35, 65])[0]
 
     chose_wisely_art = pyfiglet.figlet_format("You Chose Wisely!")
     chose_poorly_art = pyfiglet.figlet_format("You Chose Poorly!")
@@ -226,6 +226,22 @@ She resists — clawing, screaming, unleashing all her dark strength.
 (Your speed determines the outcome...)
 
 Press Enter/Return to begin the struggle!
+""",
+        "jigsaw_intro": """
+You've grown strong... strong enough to challenge the Witch lord herself.
+
+The portal shimmers with eerie violet light, and your footsteps echo into the unknown.
+
+As you arrive before the gates of the Witch lord’s Castle, the air grows colder,
+and ancient magic pulses through the ground.
+
+A massive stone door stands in your way — no handle, no keyhole — only a strange carved pattern...
+
+🧩 To enter, you must solve the puzzle the ancients left behind.
+
+Complete the jigsaw to prove your mind is as sharp as your blade.
+
+Press any key to begin the test...
 """
     }
     if name in game_dialogues:
