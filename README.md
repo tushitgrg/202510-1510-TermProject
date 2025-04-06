@@ -20,7 +20,7 @@ tushitgrg
 
 Please wear headphones while playing the game for best experience.
 Please Use the Native terminal on your MAC/LINUX. Before starting the game, Please ensure the window size is atleast
-46 rows, and at least 136 columns. Please do not change the window size, while playing. Thank you!
+53 rows, and at least 163 columns. Please do not change the window size, while playing. Thank you!
 
 ## Here is the table displaying required elements and their location
 

@@ -129,7 +129,7 @@ def is_screen_size_ok(stdscr: curses.window) -> bool:
     :return: a boolean, True if the screen size is sufficient, False otherwise
     """
     max_y, max_x = stdscr.getmaxyx()
-    if max_y < 46 or max_x < 135:
+    if max_y < 53 or max_x < 163:
         return False
     return True
 
