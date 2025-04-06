@@ -18,9 +18,18 @@ from maze import initialise_colors_for_map
 from scenes import play_game_scene, play_battle_end
 from ui import is_screen_size_ok
 
+
 def load_riddles_from_json() -> List[Dict[str, str]]:
+    """
+    Load riddles from a json file named 'riddles.json'.
+
+    :precondition: 'riddles.json' must exist in the working directory and be valid json
+    :postcondition: parse the data into a valid python data structure
+    :return: a list of dictionaries, each including a riddle and its answer
+    """
     with open('riddles.json', 'r', encoding='utf-8') as file_obj:
         return json.load(file_obj)
+
 
 def play_riddle(stdscr: curses.window, character: Dict[str, int]) -> None:
     """
