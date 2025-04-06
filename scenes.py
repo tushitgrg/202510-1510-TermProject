@@ -121,9 +121,9 @@ def play_battle_end(stdscr: curses.window, character: Dict[str, Union[str, int]]
     """
     xp_change = character["Level"] * 30
     if user_decision == "flee":
-        was_harmless = random.choices([True, False], weights=[65, 35])[0]
+        was_harmless = random.choices([True, False], weights=[60, 40])[0]
     else:
-        was_harmless = random.choices([True, False], weights=[35, 65])[0]
+        was_harmless = random.choices([True, False], weights=[40, 60])[0]
 
     chose_wisely_art = pyfiglet.figlet_format("You Chose Wisely!")
     chose_poorly_art = pyfiglet.figlet_format("You Chose Poorly!")
