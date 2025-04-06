@@ -69,7 +69,32 @@ def welcome_user_and_ask_for_name(stdscr: curses.window) -> str:
     :postcondition: print the welcome message
     :return: a string, representing the name
     """
-    welcome_message = pyfiglet.figlet_format("Welcome \n To \n Inferno \n Trials")
+    welcome_art = pyfiglet.figlet_format("Welcome To \n Inferno Trials")
+    welcome_message = f"""         
+                               .=======-         
+                             =++-.               
+                           **+-                  
+                         :#*+*                   
+                        :**+=+-                  
+                       -*+===++                  
+                      :+=====++                  
+                     .=+++*=+===                 
+                     =====+++**+.                
+                    -===+++++***:                
+                    ===++==**+=+.                
+                   -*=+=++*++++*-                
+                   =##*=+++=+====                
+                  :+***%***==+===                
+     :****++++=======+++++*****+*+-              
+ :*++++********--==++++*#*+++***#*++=++*+.       
++++++=====++++*+=++=++*%%##**++++**++++++++*:    
+:*++++++======-::.                :-+##*+++++*-  
+                                          -##++# 
+                                               ++
+    
+    {welcome_art}
+    """
+
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     stdscr.clear()
 
@@ -89,7 +114,7 @@ def welcome_user_and_ask_for_name(stdscr: curses.window) -> str:
             stdscr.addstr(start_y + counter_x, start_x, line[:counter_j], curses.color_pair(3))
 
             stdscr.refresh()
-            time.sleep(0.007)
+            time.sleep(0.001)
 
     stdscr.refresh()
     return get_user_name(stdscr)
