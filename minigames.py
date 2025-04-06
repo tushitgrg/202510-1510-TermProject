@@ -8,6 +8,8 @@ import time
 import curses
 
 import random
+from typing import Dict, List, Tuple
+
 import simpleaudio
 
 from character import make_character
@@ -16,7 +18,7 @@ from scenes import play_game_scene, play_battle_end
 from ui import is_screen_size_ok
 
 
-def play_riddle(stdscr, character):
+def play_riddle(stdscr: curses.window, character: Dict[str, int]) -> None:
     """
     Drive the riddle mini-game
 
@@ -94,7 +96,7 @@ def play_riddle(stdscr, character):
     curses.noecho()
 
 
-def get_bar_color(time_percentage):
+def get_bar_color(time_percentage: float):
     """
     Determine the color of the progress bar based on the remaining time percentage.
 
@@ -111,7 +113,7 @@ def get_bar_color(time_percentage):
         return curses.color_pair(4)
 
 
-def get_alert_message(presses, target_presses, elapsed_time, time_limit):
+def get_alert_message(presses: int, target_presses: int, elapsed_time: float, time_limit: float) -> str:
     """
     Generate an encouraging message based on player progress and remaining time.
 
@@ -139,7 +141,8 @@ def get_alert_message(presses, target_presses, elapsed_time, time_limit):
         return "Keep struggling!"
 
 
-def draw_progress_bar(time_limit, elapsed_time, presses, target_presses, stdscr, start_y, lines, max_x):
+def draw_progress_bar(time_limit: float, elapsed_time: float, presses: int, target_presses: int, stdscr: curses.window,
+                      start_y: int, lines: List[str], max_x: int) -> None:
     """
     Draw the progress bar and status messages on the screen for the struggle event.
 
@@ -170,7 +173,7 @@ def draw_progress_bar(time_limit, elapsed_time, presses, target_presses, stdscr,
                   time_string, bar_color)
 
 
-def load_sounds():
+def load_sounds() -> Dict[str, simpleaudio.WaveObject]:
     """
     Load and return a dictionary of preloaded sound effects for different game events.
 
@@ -186,7 +189,8 @@ def load_sounds():
     }
 
 
-def handle_failure(stdscr, play_obj, sounds, character, boss):
+def handle_failure(stdscr: curses.window, play_obj: simpleaudio.PlayObject, sounds: Dict[str, simpleaudio.WaveObject],
+                   character: Dict[str, int], boss: bool) -> None:
     """
     Handle the outcome of a failed struggle event.
 
@@ -206,7 +210,8 @@ def handle_failure(stdscr, play_obj, sounds, character, boss):
     character['Current HP'] = 0 if boss else character['Current HP'] - 1
 
 
-def handle_success(stdscr, play_obj, sounds, character, boss):
+def handle_success(stdscr: curses.window, play_obj: simpleaudio.PlayObject, sounds: Dict[str, simpleaudio.WaveObject],
+                   character: Dict[str, int], boss: bool) -> None:
     """
     Handle the outcome of a successful struggle event.
 
@@ -225,7 +230,7 @@ def handle_success(stdscr, play_obj, sounds, character, boss):
         play_battle_end(stdscr, character, "burn")
 
 
-def display_centered_message(stdscr, message, max_y, max_x):
+def display_centered_message(stdscr: curses.window, message: str, max_y: int, max_x: int) -> Tuple[int, List[str]]:
     """
     Display a multiline message centered on the screen.
 
@@ -247,7 +252,7 @@ def display_centered_message(stdscr, message, max_y, max_x):
     return start_y, lines
 
 
-def struggle_game(stdscr, message, character, boss=False):
+def struggle_game(stdscr: curses.window, message: str, character: Dict[str, int], boss: bool = False) -> None:
     """
     Simulate a struggle event where the player must press 'B' rapidly to succeed.
 
