@@ -8,10 +8,12 @@ validation, and movement choices.
 import time
 
 import curses
+from typing import Optional
+
 import pyfiglet
 
 
-def get_user_battle_decision(stdscr):
+def get_user_battle_decision(stdscr: curses.window) -> str:
     """
     Prompt the user to make a battle decision in the game.
 
@@ -52,7 +54,7 @@ def get_user_battle_decision(stdscr):
     return input_decision.strip().lower()
 
 
-def welcome_user_and_ask_for_name(stdscr):
+def welcome_user_and_ask_for_name(stdscr: curses.window) -> str:
     """
     Prompt the user for their name.
 
@@ -89,7 +91,7 @@ def welcome_user_and_ask_for_name(stdscr):
     return get_user_name(stdscr)
 
 
-def is_screen_size_ok(stdscr):
+def is_screen_size_ok(stdscr: curses.window) -> bool:
     """
     Check if the terminal screen size meets the required dimensions.
 
@@ -103,7 +105,7 @@ def is_screen_size_ok(stdscr):
     return True
 
 
-def get_user_choice(stdscr, prompt_y):
+def get_user_choice(stdscr: curses.window, prompt_y: int) -> Optional[str]:
     """
     Get the user's movement choice from the keyboard.
 
@@ -131,7 +133,7 @@ def get_user_choice(stdscr, prompt_y):
     return input_direction
 
 
-def get_user_name(stdscr):
+def get_user_name(stdscr: curses.window) -> str:
     """
     Prompt the user to enter their name.
 
