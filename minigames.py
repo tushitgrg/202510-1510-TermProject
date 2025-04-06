@@ -9,13 +9,13 @@ import time
 import curses
 
 import random
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import simpleaudio
 
 from character import make_character
 from maze import initialise_colors_for_map
-from scenes import play_game_scene, play_battle_end
+from scenes import play_game_scene, play_battle_end, get_game_dialogue
 from ui import is_screen_size_ok
 
 
@@ -228,7 +228,8 @@ def display_centered_message(stdscr: curses.window, message: str, max_y: int, ma
     return start_y, lines
 
 
-def struggle_game(stdscr: curses.window, message: str, character: Dict[str, int], boss: bool = False) -> None:
+def struggle_game(stdscr: curses.window, message: str, character: Dict[str, Union[str, int]],
+                  boss: bool = False) -> None:
     """
     Simulate a struggle event where the player must press 'B' rapidly to succeed.
 
@@ -240,6 +241,7 @@ def struggle_game(stdscr: curses.window, message: str, character: Dict[str, int]
     :param character: a dictionary containing the character's current position and stats
     :param boss: a boolean indicating if this is a boss fight, default is False
     """
+    play_game_scene(stdscr, get_game_dialogue('enemy_warning', character['Name']))
     sounds = load_sounds()
     play_obj = sounds["fire"].play()
     stdscr.clear()

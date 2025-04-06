@@ -64,7 +64,7 @@ def generate_maze(start_x: int, start_y: int, board: Dict[Tuple[int, int], str],
 
 
 def make_board(rows: int, columns: int, character: Dict[str, Union[int, str]], boss: bool = False) -> Tuple[
-    Dict[Tuple[int, int], str], Optional[List[int]]]:
+    Dict[Tuple[int, int], str], Optional[Tuple[int, int]]]:
     """
     Create a maze board and generate its structure.
 
@@ -86,7 +86,7 @@ def make_board(rows: int, columns: int, character: Dict[str, Union[int, str]], b
     generate_maze(0, 0, board, rows, columns, goal_position, boss)
     board[(goal_position[0], goal_position[1])] = "Goal" if not boss else "Boss"
     if not boss:
-        return board, goal_position
+        return board, (goal_position[0], goal_position[1])
     else:
         return board, None
 

@@ -214,7 +214,19 @@ def get_game_dialogue(name: str, user_name: str) -> Optional[str]:
     {pyfiglet.figlet_format("Game Over!")}  
 
      Press Enter/Return to quit the game
-            """
+            """,
+        "enemy_warning": """
+You have chosen to BURN her...
+
+But she does not go quietly.
+
+She resists — clawing, screaming, unleashing all her dark strength.
+
+🔥 YOU WILL HAVE TO MASH THE 'B' KEY TO COMPLETE THE RITUAL! 🔥
+(Your speed determines the outcome...)
+
+Press Enter/Return to begin the struggle!
+"""
     }
     if name in game_dialogues:
         return game_dialogues[name]
