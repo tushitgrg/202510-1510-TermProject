@@ -67,7 +67,10 @@ def play_riddle(stdscr: curses.window, character: Dict[str, int]) -> None:
                         "You answered correctly. \n The wall slides open, revealing a mysterious passage! \n Press "
                         "Enter/Return to continue")
     else:
-        play_game_scene(stdscr, "You answered Wrong. \n You loose 1 HP \n Press Enter/Return to continue")
+        play_game_scene(stdscr, f"""You answered Wrong. 
+         The answer was {riddle['answer'][0]}
+         You loose 1 HP 
+         Press Enter/Return to continue""")
         character["Current HP"] -= 1
     curses.noecho()
 
