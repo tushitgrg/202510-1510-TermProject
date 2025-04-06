@@ -364,7 +364,7 @@ def start_jigsaw_game(stdscr: curses.window) -> None:
         cursor = (cursor_y, cursor_x)
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

@@ -221,7 +221,7 @@ def get_game_dialogue(name: str, user_name: str) -> Optional[str]:
     return None
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

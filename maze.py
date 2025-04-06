@@ -7,7 +7,7 @@ display. It handles maze creation, character stats rendering, and real-time map 
 """
 import random
 import curses
-from typing import Tuple, Dict, List, Union
+from typing import Tuple, Dict, List, Union, Optional
 
 import simpleaudio
 
@@ -63,7 +63,8 @@ def generate_maze(start_x: int, start_y: int, board: Dict[Tuple[int, int], str],
             generate_maze(result_x, result_y, board, rows, cols, goal_position, boss)
 
 
-def make_board(rows: int, columns: int, character: Dict[str, Union[int, str]], boss: bool = False):
+def make_board(rows: int, columns: int, character: Dict[str, Union[int, str]], boss: bool = False) -> Tuple[
+    Dict[Tuple[int, int], str], Optional[List[int]]]:
     """
     Create a maze board and generate its structure.
 
@@ -259,7 +260,7 @@ def describe_current_location(stdscr: curses.window, board: Dict[Tuple[int, int]
     stdscr.refresh()
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

@@ -182,7 +182,7 @@ def check_for_boss(board: Dict[Tuple[int, int], str], character: Dict[str, int])
     return False
 
 
-def main():
+def main() -> None:
     """
     Drive the program.
     """

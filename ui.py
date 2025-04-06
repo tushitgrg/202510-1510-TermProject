@@ -156,7 +156,7 @@ def get_user_name(stdscr: curses.window) -> str:
     return input_name
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

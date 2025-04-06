@@ -13,7 +13,7 @@ from scenes import play_game_scene, play_animation_fire, play_battle_end, get_ga
 from ui import welcome_user_and_ask_for_name, is_screen_size_ok, get_user_choice, get_user_battle_decision
 
 
-def game(stdscr):
+def game(stdscr: curses.window) -> None:
     """
     Drive the game.
     """
@@ -83,7 +83,7 @@ def game(stdscr):
     play_game_scene(stdscr, get_game_dialogue("game_over", input_name))
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

@@ -270,7 +270,7 @@ def struggle_game(stdscr: curses.window, message: str, character: Dict[str, int]
     stdscr.nodelay(False)
 
 
-def main(stdscr):
+def main(stdscr: curses.window) -> None:
     """
     Drive the program.
     """

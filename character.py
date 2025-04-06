@@ -6,11 +6,12 @@ This module creates and manages game characters, tracking their health, position
 to check vitality, move characters, initialize stats, and handle leveling up.
 """
 import curses
+from typing import Dict, Union
 
 from scenes import play_game_scene
 
 
-def is_alive(character: dict) -> bool:
+def is_alive(character: Dict[str, Union[str, int]]) -> bool:
     """
     Check if the character is still alive.
 
@@ -35,7 +36,7 @@ def is_alive(character: dict) -> bool:
     return False
 
 
-def move_character(character: dict, new_pos: tuple[int, int]) -> None:
+def move_character(character: Dict[str, Union[str, int]], new_pos: tuple[int, int]) -> None:
     """
     Move the character to a new position.
 
@@ -64,7 +65,7 @@ def move_character(character: dict, new_pos: tuple[int, int]) -> None:
     character["Y-coordinate"], character["X-coordinate"] = new_pos
 
 
-def make_character(name: str) -> dict:
+def make_character(name: str) -> Dict[str, Union[str, int]]:
     """
     Create a new character with the given name.
 
@@ -87,7 +88,7 @@ def make_character(name: str) -> dict:
     return character
 
 
-def check_and_level_up(character: dict, stdscr: curses.window) -> None:
+def check_and_level_up(character: Dict[str, Union[str, int]], stdscr: curses.window) -> None:
     """
     Check and level up the character if they have enough experience.
 
@@ -107,7 +108,7 @@ def check_and_level_up(character: dict, stdscr: curses.window) -> None:
         character['Current HP'] = 5 * character['Level']
 
 
-def main():
+def main() -> None:
     """
     Drive the program.
     """
