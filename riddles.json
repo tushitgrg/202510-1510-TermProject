@@ -1,0 +1,132 @@
+[
+  {
+    "description": "You enter a dimly lit room. A mysterious inscription catches your eye.\nWhat has keys, but no locks; space, but no room; and you can enter, but not go in?",
+    "answer": [
+      "keyboard",
+      "keyboards"
+    ]
+  },
+  {
+    "description": "A chamber of mirrors reflects your every move, casting shifting shadows.\nI am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
+    "answer": [
+      "fire"
+    ]
+  },
+  {
+    "description": "An ancient library with dusty scrolls surrounds you, whispering forgotten tales.\nThe more you take, the more you leave behind. What am I?",
+    "answer": [
+      "footsteps",
+      "footstep"
+    ]
+  },
+  {
+    "description": "A room filled with water-worn stones and echoing whispers, ancient maps scattered about.\nI have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+    "answer": [
+      "map",
+      "maps"
+    ]
+  },
+  {
+    "description": "A chamber bathed in soft, ethereal light, with delicate objects casting long shadows.\nWhat can travel around the world while staying in a corner?",
+    "answer": [
+      "stamp",
+      "stamps"
+    ]
+  },
+  {
+    "description": "A room of intricate clockwork and spinning gears, metal glinting in muted light.\nI am always hungry; I must always be fed. The finger I touch will soon turn red. What am I?",
+    "answer": [
+      "fire"
+    ]
+  },
+  {
+    "description": "A room filled with floating, luminescent symbols swirling in ethereal patterns.\nI have a head and a tail that will never meet. Having too many of me is always a treat. What am I?",
+    "answer": [
+      "coin",
+      "coins"
+    ]
+  },
+  {
+    "description": "A chamber carved in cold stone, with echoes of hushed whispers and the steady drip of water.\nI have a ring, but no finger; I can make you dance when I sing. What am I?",
+    "answer": [
+      "telephone",
+      "phone"
+    ]
+  },
+  {
+    "description": "A hallway of mirrored walls stretches infinitely. Reflections fade in and out.\nIf you drop me, I’ll surely crack; but if you smile, I’ll always smile back. What am I?",
+    "answer": [
+      "mirror"
+    ]
+  },
+  {
+    "description": "You stand beside a babbling fountain in a courtyard overgrown with ivy.\nI’m always running, never walking; often murmuring, never talking. What am I?",
+    "answer": [
+      "river"
+    ]
+  },
+  {
+    "description": "A hidden alcove filled with dripping candles casting shadows on ancient stone.\nI am tall when I’m young and short when I’m old. What am I?",
+    "answer": [
+      "candle"
+    ]
+  },
+  {
+    "description": "A dim corridor lined with cryptic symbols. A soft breeze stirs dust motes in the air.\nForward I am heavy, backward I am not. What am I?",
+    "answer": [
+      "ton"
+    ]
+  },
+  {
+    "description": "In a vaulted hall, tapestries depict a strange feast where no one eats.\nWhat has a mouth but never talks, has a bed but never sleeps, and runs but never walks?",
+    "answer": [
+      "river"
+    ]
+  },
+  {
+    "description": "A vast, open courtyard under a star-filled sky, silent and still.\nI am not a bird, but I can fly through the sky. I cast no shadow, and I make no sound. What am I?",
+    "answer": [
+      "time"
+    ]
+  },
+  {
+    "description": "A small, candlelit alcove with secrets whispered in hushed tones.\nIf you hold me, I will vanish. If you share me, I won't. What am I?",
+    "answer": [
+      "secret",
+      "secrets"
+    ]
+  },
+  {
+    "description": "An old gallery filled with dusty portraits and faint echoes of laughter.\nI can bring tears to your eyes, resurrect the dead, make you smile, and reverse time. I form in an instant but can last a lifetime. What am I?",
+    "answer": [
+      "memory",
+      "memories"
+    ]
+  },
+  {
+    "description": "A humid chamber with dripping water and a single cloth draped over a chair.\nThe more I dry, the wetter I get. What am I?",
+    "answer": [
+      "towel",
+      "towels"
+    ]
+  },
+  {
+    "description": "A grand hall with echoing footsteps, distant voices calling your identity.\nWhat belongs to you but is used by everyone else?",
+    "answer": [
+      "name",
+      "names"
+    ]
+  },
+  {
+    "description": "A sunlit room where rays stream in through tall windows, illuminating floating dust.\nI can fill a room, yet take up no space. What am I?",
+    "answer": [
+      "light"
+    ]
+  },
+  {
+    "description": "A quiet courtyard where a single bucket sits by a well.\nI weigh nothing, but you can see me. If you place me in a bucket, it becomes lighter. What am I?",
+    "answer": [
+      "hole"
+    ]
+  }
+]
