@@ -28,12 +28,16 @@ def get_user_battle_decision(stdscr: curses.window) -> str:
     """
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
-    message = """
-   The villagers warned you—witches walk among us. Some bring ruin, some bring fortune. 
-   But no one truly knows which until it’s too late.
+    witch_art = pyfiglet.figlet_format("WITCHES AMONG US!")
+    message = f"""
+    {witch_art}
+    The villagers warned you—witches walk among us. Some bring ruin, some bring fortune.
+    But no one truly knows which... until it’s too late.
 
- Burn Her (Type “Burn”) – If she is evil, the land is safe. If she is good... you are cursed.
- Let Her Flee (Type “Flee”) – If she is good, fortune follows. If she is evil... you are cursed.
+    Burn Her  (Type "Burn") – If she is evil, the land is safe. But if she is good... you bear a dreadful curse.
+    Let Her Flee (Type "Flee") – If she is good, fortune will follow. But if she is evil.. her darkness grows unchecked.
+
+    Choose wisely, for the fate of many rests in your hands...
     """
     lines = message.strip().split('\n')
     start_y = max(0, (max_y - len(lines)) // 2)
