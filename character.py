@@ -102,7 +102,9 @@ def check_and_level_up(character: Dict[str, Union[str, int]], stdscr: curses.win
     :postcondition: level up the character and update their stats correctly if conditions are met
     """
     if character['Experience'] >= character['Level'] * 200:
-        play_game_scene(stdscr, "New Achievement: You Just Levelled Up! \n Press Enter/Return to continue")
+        play_game_scene(stdscr, """New Achievement: You Just Levelled Up! 
+        (When a Player Levels Up, they are able to procure more experience from their Battles)
+         Press Enter/Return to continue""")
         character['Experience'] -= character['Level'] * 200
         character['Level'] += 1
         character['Current HP'] = 5 * character['Level']
