@@ -6,13 +6,15 @@ This module handles game scene displays and animations using curses, including m
 and battle outcomes.
 """
 import curses
+from typing import Optional
+
 import pyfiglet
 import random
 
 from ui import is_screen_size_ok
 
 
-def play_game_scene(stdscr, message):
+def play_game_scene(stdscr: curses.window, message: str) -> None:
     """
     Display a game message on the screen and wait for the user to press enter.
 
@@ -42,7 +44,7 @@ def play_game_scene(stdscr, message):
             break
 
 
-def initialise_colors_for_fire():
+def initialise_colors_for_fire() -> None:
     """
     Initialize color pairs for the fire animation.
 
@@ -57,7 +59,7 @@ def initialise_colors_for_fire():
     curses.init_pair(4, 4, 0)
 
 
-def play_animation_fire(stdscr, if_won):
+def play_animation_fire(stdscr: curses.window, if_won: bool) -> None:
     """
     Display a fire animation with a win or lose message.
 
@@ -106,7 +108,7 @@ def play_animation_fire(stdscr, if_won):
     stdscr.nodelay(False)
 
 
-def play_battle_end(stdscr, character, user_decision):
+def play_battle_end(stdscr: curses.window, character: dict, user_decision: str) -> None:
     """
     Display the battle outcome message based on the player's decision.
 
@@ -159,7 +161,7 @@ def play_battle_end(stdscr, character, user_decision):
     play_game_scene(stdscr, message)
 
 
-def get_game_dialogue(name, user_name):
+def get_game_dialogue(name: str, user_name: str) -> Optional[str]:
     """
     Retrieve pre-written game dialogues based on the scene name.
 
