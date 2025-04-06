@@ -14,7 +14,7 @@ class Test(TestCase):
 
     def test_is_screen_size_ok_screen_sufficient(self):
         mock_stdscr = MagicMock()
-        mock_stdscr.getmaxyx.return_value = (46, 135)
+        mock_stdscr.getmaxyx.return_value = (55, 165)
         expected = True
         actual = is_screen_size_ok(mock_stdscr)
         self.assertEqual(actual, expected)
