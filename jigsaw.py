@@ -216,9 +216,9 @@ def draw_piece(stdscr: curses.window, cell_y: int, cell_x: int, attr: int, ascii
     """
     stdscr.addstr(cell_y, cell_x, "+-----+", attr)
     art_piece = ascii_picture[piece_idx]
-    for i, line in enumerate(art_piece):
-        if i < piece_height:
-            stdscr.addstr(cell_y + i + 1, cell_x, f"|{line}|", attr)
+    for index, line in enumerate(art_piece):
+        if index < piece_height:
+            stdscr.addstr(cell_y + index + 1, cell_x, f"|{line}|", attr)
 
     stdscr.addstr(cell_y + piece_height + 1, cell_x, "+-----+", attr)
 

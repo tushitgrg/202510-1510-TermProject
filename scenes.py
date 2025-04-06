@@ -6,7 +6,7 @@ This module handles game scene displays and animations using curses, including m
 and battle outcomes.
 """
 import curses
-from typing import Optional
+from typing import Optional, Dict, Union
 
 import pyfiglet
 import random
@@ -108,7 +108,7 @@ def play_animation_fire(stdscr: curses.window, if_won: bool) -> None:
     stdscr.nodelay(False)
 
 
-def play_battle_end(stdscr: curses.window, character: dict, user_decision: str) -> None:
+def play_battle_end(stdscr: curses.window, character: Dict[str, Union[str, int]], user_decision: str) -> None:
     """
     Display the battle outcome message based on the player's decision.
 
