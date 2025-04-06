@@ -119,45 +119,61 @@ def play_battle_end(stdscr: curses.window, character: dict, user_decision: str) 
     :precondition: character dictionary must include 'Experience' and 'Level' keys
     :postcondition: the character's experience is updated based on the battle outcome
     """
-    she_was_good = random.choice([True, False])
-    if she_was_good:
-        innocent_art = pyfiglet.figlet_format('She was Innocent!')
-        if user_decision == "flee":
-            message = f"""
-             {innocent_art}
-             She vanishes into mist. A strange warmth fills your soul. 
-             You gained {character["Level"] * 30} Exp
-             Press Enter/Return to continue
-                """
-            character["Experience"] += character["Level"] * 30
-
-        else:
-            message = f"""
-                        {innocent_art}
-                         As the flames rise, her final words whisper through your mind. 
-                        You lost {character["Level"] * 30} Exp
-                        Press Enter/Return to continue
-                            """
-            character["Experience"] = max(0, character["Experience"] - character["Level"] * 30)
+    xp_change = character["Level"] * 30
+    if user_decision == "flee":
+        was_harmless = random.choices([True, False], weights=[70, 30])[0]
     else:
-        not_innocent_art = pyfiglet.figlet_format('She was NOT Innocent!')
-        if user_decision == "flee":
-            message = f"""
-                {not_innocent_art}
-                 A distant cackle. The village burns. You feel weaker.
-                You lost {character["Level"] * 30} Exp
-                Press Enter/Return to continue
-                """
-            character["Experience"] = max(0, character["Experience"] - character["Level"] * 30)
-        else:
-            message = f"""
-                       {not_innocent_art}
-                        A shriek echoes. The curse lifts. You are safe... for now.
-                       You gained {character["Level"] * 30} Exp
-                       Press Enter/Return to continue
-                       """
-            character["Experience"] += character["Level"] * 30
+        was_harmless = random.choices([True, False], weights=[30, 70])[0]
 
+    chose_wisely_art = pyfiglet.figlet_format("You Chose Wisely!")
+    chose_poorly_art = pyfiglet.figlet_format("You Chose Poorly!")
+    if was_harmless and user_decision == "flee":
+        message = f"""
+    {chose_wisely_art}
+    Your kindness spared a life that posed no threat.
+    A calm resolve settles in your heart, rewarding your mercy.
+
+    You GAINED {xp_change} Exp
+
+    Press Enter/Return to continue...
+    """
+        character["Experience"] += xp_change
+
+    elif (not was_harmless) and user_decision == "burn":
+        message = f"""
+    {chose_wisely_art}
+    Your instincts proved true. The wicked threat is extinguished.
+    A surge of newfound power courses through your veins.
+
+    You GAINED {xp_change} Exp
+
+    Press Enter/Return to continue...
+    """
+        character["Experience"] += xp_change
+
+    elif was_harmless and user_decision == "burn":
+        message = f"""
+    {chose_poorly_art}
+    Your flames consumed an innocent soul.
+    Remorse gnaws at your conscience, draining your vitality.
+
+    You LOST {xp_change} Exp
+
+    Press Enter/Return to continue...
+    """
+        character["Experience"] = max(0, character["Experience"] - xp_change)
+
+    else:
+        message = f"""
+    {chose_poorly_art}
+    Her wicked laughter follows you into the darkness.
+    In retreat, you forfeit the chance to avert greater tragedy, sapping your resolve.
+
+    You LOST {xp_change} Exp
+
+    Press Enter/Return to continue...
+    """
+        character["Experience"] = max(0, character["Experience"] - xp_change)
     play_game_scene(stdscr, message)
 
 
