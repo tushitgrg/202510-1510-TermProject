@@ -109,7 +109,9 @@ def draw_character_info(stats_win, start_point: int, character: Dict[str, Union[
     }
     stats_win.addstr(start_point + 2, 1, f"Name: {character['Name']}", curses.color_pair(4))
     stats_win.addstr(start_point + 3, 1, f"Level: {character['Level']}", curses.color_pair(3))
-    stats_win.addstr(start_point + 4, 1, f"Rank: {rank_names[character['Level']]}", curses.color_pair(2))
+    stats_win.addstr(start_point + 4, 1,
+                     f"Rank: {rank_names.get(character['Level'], 'The Hand of Divine Wrath')}",
+                     curses.color_pair(2))
     stats_win.addstr(start_point + 5, 1, f"Experience: {character['Experience']}/{character['Level'] * 200}",
                      curses.color_pair(1))
 
@@ -172,7 +174,7 @@ def print_game_stats(stdscr: curses.window, character: Dict[str, Union[str, int]
     ░░░╚═╝░░░╚═╝░░╚═╝╚═╝╚═╝░░╚═╝╚══════╝╚═════╝░
 """
 
-    stats_win.addstr(0, 3, " Character Stats ", curses.A_BOLD | curses.color_pair(4))
+    stats_win.addstr(0, 3, " Character Stats  ", curses.A_BOLD | curses.color_pair(4))
     lines = game_name_art.split('\n')
     for index, line in enumerate(lines):
         stats_win.addstr(index, 10, line)
