@@ -15,7 +15,7 @@ def is_alive(character: Dict[str, Union[str, int]]) -> bool:
     """
     Check if the character is still alive.
 
-    This function returns True if the character's current HP is greater than 0, and False if it reaches 0.
+    This function returns True if the character's current HP is greater than 0, and False otherwise.
 
     :param character: a dictionary representing the character with at least a "Current HP" key
     :precondition: character is in the correct format
