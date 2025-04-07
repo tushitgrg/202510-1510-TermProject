@@ -243,6 +243,9 @@ def struggle_game(stdscr: curses.window, message: str, character: Dict[str, Unio
     :param message: a string representing the initial message to be displayed on screen
     :param character: a dictionary containing the character's current position and stats
     :param boss: a boolean indicating if this is a boss fight, default is False
+    :precondition: stdscr must be a valid curses window object
+    :postcondition: increase experience if player wins
+    :postcondition: decrease hp if player looses
     """
     play_game_scene(stdscr, get_game_dialogue('enemy_warning', character['Name']))
     sounds = load_sounds()
