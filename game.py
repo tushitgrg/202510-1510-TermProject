@@ -17,6 +17,7 @@ def game(stdscr: curses.window) -> None:
     """
     Drive the game.
     """
+    curses.curs_set(0)
     if not is_screen_size_ok(stdscr):
         stdscr.addstr(0, 0, "Please Increase your window size and try again")
         stdscr.addstr(2, 0, "Press any key to exit")
@@ -84,19 +85,17 @@ def game(stdscr: curses.window) -> None:
     play_game_scene(stdscr, get_game_dialogue("game_over", input_name))
 
 
-def main(stdscr: curses.window) -> None:
+def main() -> None:
     """
     Drive the program.
     """
-    curses.curs_set(0)
-    stdscr.clear()
     try:
-        game(stdscr)
+        curses.wrapper(game)
     except KeyboardInterrupt:
-        print("Game exited Successfully!")
+        print("Game exited Successfully! Thank you for playing it!")
     except curses.error:
-        print("Window Size Changed! Please Restart!")
+        print("Window Size Changed! Please Restart the game!")
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    main()
