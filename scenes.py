@@ -51,6 +51,7 @@ def initialise_colors_for_fire() -> None:
     This function sets up different color pairs, required to simulate fire effects in the curses window.
 
     :precondition: curses object must be initialized
+    :postcondition: set correct colors in curses
     """
     curses.start_color()
     curses.init_pair(1, 0, 0)
