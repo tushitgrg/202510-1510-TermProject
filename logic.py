@@ -162,7 +162,7 @@ def check_for_boss(board: Dict[Tuple[int, int], str], character: Dict[str, int])
     :precondition: the character must have valid "X-coordinate" and "Y-coordinate" keys with integer values
     :postcondition: determine if the character's current position matches a boss's position
     :postcondition: replace the boss, if present, with a space
-    :return: a boolean, True If a boss is present, False otherwise
+    :return: a boolean, True if a boss is present, False otherwise
 
     >>> board_test = {(0, 0): "space", (0, 1): "space", (1, 0): "Boss", (1, 1): "space"}
     >>> character_test = {"X-coordinate": 0, "Y-coordinate": 1}
