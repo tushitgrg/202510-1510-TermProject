@@ -194,7 +194,8 @@ def get_game_dialogue(name: str, user_name: str) -> Optional[str]:
     You, {user_name}—the relentless witch hunter—have been summoned
     by the Grand Council of Purity. Your sacred duty: eradicate the witches
     that plague these lands with the holy flames of justice.
-
+    You, {user_name} are entrusted with this holy duty to find the witchlord
+    and burn her! Only then you will be able to save the cursed realm of Ashen vale
     [Press ENTER/RETURN to begin your hunt.]
 
 
