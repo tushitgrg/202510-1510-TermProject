@@ -208,6 +208,31 @@ def initialise_colors_for_map() -> None:
     curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 
+def handle_heal(character: Dict[str, Union[int, str]], board: Dict[Tuple[int, int], str], map_win, max_y: int) -> None:
+    """
+    Handle the healing action when the character steps on a heal block.
+
+    This function increases the HP by 1, if the character's current HP is less than the maximum HP (Level * 5), and
+    remove the heal block from the board. Otherwise, displays a message indicating that the character is not injured.
+
+    :param character: a dictionary containing the character's current position and stats
+    :param board: a dictionary representing game board, where keys are (y, x) coordinates and values are entity types
+    :param map_win: a curses window object
+    :param max_y: integer representing maximum y-coordinate of the screen
+    :precondition: character's 'Current HP' and 'Level' are valid integers
+    :precondition: board contains a 'heal' at the character's location
+    :postcondition: increase character's HP if not at maximum
+    :postcondition: remove the heal block, if used
+    """
+    if character["Current HP"] + 1 <= character['Level'] * 5:
+        heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
+        heal_obj.play()
+        character["Current HP"] += 1
+        board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
+    else:
+        map_win.addstr(max_y - 5, 3, "Come Back when you are injured! ")
+
+
 def describe_current_location(stdscr: curses.window, board: Dict[Tuple[int, int], str],
                               character: Dict[str, Union[int, str]]) -> None:
     """
@@ -252,12 +277,8 @@ def describe_current_location(stdscr: curses.window, board: Dict[Tuple[int, int]
 
     print_game_stats(stdscr, character, ascii_chars)
 
-    heal_obj = simpleaudio.WaveObject.from_wave_file("sounds/heal_effect.wav")
     if board[(character["Y-coordinate"], character["X-coordinate"])] == "heal":
-        if character["Current HP"] + 1 <= character['Level'] * 5:
-            heal_obj.play()
-            character["Current HP"] += 1
-            board[(character["Y-coordinate"], character["X-coordinate"])] = "space"
+        handle_heal(character, board, map_win, max_y)
 
     stdscr.refresh()
 
