@@ -213,7 +213,7 @@ def handle_heal(character: Dict[str, Union[int, str]], board: Dict[Tuple[int, in
     Handle the healing action when the character steps on a heal block.
 
     This function increases the HP by 1, if the character's current HP is less than the maximum HP (Level * 5), and
-    remove the heal block from the board. Otherwise, displays a message indicating that the character is not injured.
+    remove the heal block from the board. Otherwise, display a message indicating that the character is not injured.
 
     :param character: a dictionary containing the character's current position and stats
     :param board: a dictionary representing game board, where keys are (y, x) coordinates and values are entity types
