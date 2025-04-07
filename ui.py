@@ -124,6 +124,8 @@ def is_screen_size_ok(stdscr: curses.window) -> bool:
     """
     Check if the terminal screen size meets the required dimensions.
 
+    This function checks if the terminal has at least 53 rows and 163 columns.
+
     :param stdscr: the main curses screen window object
     :precondition: stdscr must be a valid curses window object
     :return: a boolean, True if the screen size is sufficient, False otherwise
