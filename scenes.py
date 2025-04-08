@@ -140,7 +140,7 @@ def play_battle_end(stdscr: curses.window, character: Dict[str, Union[str, int]]
     """
         character["Experience"] += xp_change
 
-    elif (not was_harmless) and user_decision == "burn":
+    elif not was_harmless and user_decision == "burn":
         message = f"""
     {chose_wisely_art}
     Your instincts proved true. The wicked threat is extinguished.
