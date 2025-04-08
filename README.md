@@ -29,10 +29,10 @@ Although there are multiple instances of the elements, only one example has been
 
 | Required Elements                 | Code Location    |
 |-----------------------------------|------------------|
-| Immutable data structures (tuple) | logic.py :85     |
+| Immutable data structures (tuple) | logic.py :140    |
 | Mutable data structures  (dict)   | character.py :87 |
 | Exceptions and exception handling | game.py :92      |
-| Minimized scope                   | scenes.py :129   |
+| Minimized scope                   | scenes.py :34    |
 | Decomposition                     | scenes.py :17    |
 | Simple flat code                  | maze.py :203     |
 | Comprehensions (Dict)             | maze.py :82      |
