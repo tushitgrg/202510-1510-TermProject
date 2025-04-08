@@ -32,14 +32,14 @@ Although there are multiple instances of the elements, only one example has been
 | Immutable data structures (tuple) | logic.py :85     |
 | Mutable data structures  (dict)   | character.py :87 |
 | Exceptions and exception handling | game.py :92      |
-| Minimized scope                   | scenes.py :128   |
+| Minimized scope                   | scenes.py :129   |
 | Decomposition                     | scenes.py :17    |
-| Simple flat code                  | jigsaw.py :15    |
+| Simple flat code                  | maze.py :203     |
 | Comprehensions (Dict)             | maze.py :82      |
 | if-statements                     | jigsaw.py :189   |
 | Repetition                        | scenes.py :36    |
-| Membership operator               | ui.py :130       |
-| Range function                    | maze.py :129     |
+| Membership operator               | ui.py :157       |
+| Range function                    | maze.py :131     |
 | Itertools      (product)          | jigsaw.py :259   |
 | Random module   (shuffle)         | jigsaw.py :116   |
 | Function annotations (every)      | logic.py :15     |
