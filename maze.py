@@ -130,9 +130,9 @@ def draw_health_bar(stats_win, start_point: int, character: Dict[str, int]) -> N
     max_hp = character['Level'] * 5
     for index in range(max_hp):
         if index < character["Current HP"]:
-            stats_win.addch(start_point + 6, 6 + index, '♥', curses.color_pair(5))
+            stats_win.addstr(start_point + 6, 6 + index, '♥', curses.color_pair(5))
         else:
-            stats_win.addch(start_point + 6, 6 + index, '.', curses.color_pair(1))
+            stats_win.addstr(start_point + 6, 6 + index, '.', curses.color_pair(1))
     stats_win.addstr(start_point + 6, 6 + max_hp,
                      f"] ({character['Current HP']}/{max_hp})", curses.color_pair(4))
 
